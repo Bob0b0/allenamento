@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="Allenamento">
+  <title>Allenamento Roberto</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      height: 100vh;
+      overflow: hidden;
+      -webkit-user-select: none;
+      user-select: none;
+    }
+    
+    .screen {
+      display: none;
+      height: 100vh;
+      flex-direction: column;
+    }
+    
+    .screen.active {
+      display: flex;
+    }
+    
+    /* Home Screen */
+    .home-screen {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+      justify-content: center;
+      align-items: center;
+      padding: 2rem;
+    }
+    
+    .home-title {
+      text-align: center;
+      color: white;
+      margin-bottom: 3rem;
+    }
+    
+    .home-title h1 {
+      font-size: 3rem;
+      font-weight: 900;
+      margin-bottom: 0.5rem;
+    }
+    
+    .home-subtitle {
+      font-size: 1.2rem;
+      opacity: 0.9;
+    }
+    
+    .home-info {
+      font-size: 0.9rem;
+      opacity: 0.8;
+      margin-top: 0.5rem;
+    }
+    
+    .day-buttons {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      width: 100%;
+      max-width: 400px;
+    }
+    
+    .day-btn {
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 1.5rem;
+      padding: 2rem;
+      color: white;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      text-align: center;
+    }
+    
+    .day-btn:active {
+      transform: scale(0.95);
+      background: rgba(255, 255, 255, 0.2);
+    }
+    
+    .day-name {
+      font-size: 3rem;
+      font-weight: 900;
+      margin-bottom: 0.5rem;
+    }
+    
+    .day-count {
+      font-size: 1rem;
+      opacity: 0.8;
+    }
+    
+    /* Exercise Screen */
+    .exercise-screen {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+    }
+    
+    .top-bar {
+      background: rgba(0, 0, 0, 0.3);
+      padding: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .home-btn {
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      border-radius: 0.5rem;
+      padding: 0.5rem;
+      color: white;
+      cursor: pointer;
+      font-size: 1.2rem;
+    }
+    
+    .top-info {
+      text-align: center;
+      flex: 1;
+      color: white;
+    }
+    
+    .top-day {
+      font-weight: bold;
+      font-size: 1.1rem;
+    }
+    
+    .top-progress {
+      font-size: 0.8rem;
+      opacity: 0.7;
+      margin-top: 0.2rem;
+    }
+    
+    .progress-bar {
+      background: rgba(255, 255, 255, 0.1);
+      height: 3px;
+    }
+    
+    .progress-fill {
+      background: #3b82f6;
+      height: 100%;
+      transition: width 0.3s;
+    }
+    
+    .exercise-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 1.5rem;
+      color: white;
+    }
+    
+    .exercise-header {
+      margin-bottom: 1rem;
+    }
+    
+    .type-badge {
+      display: inline-block;
+      padding: 0.3rem 0.8rem;
+      border-radius: 1rem;
+      font-size: 0.75rem;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+    }
+    
+    .type-macchina { background: #3b82f6; }
+    .type-pesi { background: #10b981; }
+    .type-cavi { background: #8b5cf6; }
+    .type-corpo_libero { background: #f59e0b; }
+    .type-cardio { background: #ef4444; }
+    
+    .day-label {
+      float: right;
+      font-size: 0.9rem;
+      opacity: 0.6;
+    }
+    
+    .exercise-name {
+      font-size: 1.8rem;
+      font-weight: bold;
+      margin-bottom: 0.3rem;
+    }
+    
+    .machine-name {
+      font-size: 0.9rem;
+      opacity: 0.6;
+      margin-bottom: 1rem;
+    }
+    
+    .exercise-image {
+      background: white;
+      border-radius: 1rem;
+      padding: 1rem;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+    
+    .exercise-image img {
+      width: 100%;
+      height: 200px;
+      object-fit: contain;
+    }
+    
+    .info-box {
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      margin-bottom: 1rem;
+    }
+    
+    .info-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .info-item label {
+      display: block;
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      opacity: 0.6;
+      margin-bottom: 0.3rem;
+    }
+    
+    .info-item value {
+      display: block;
+      font-size: 1.2rem;
+      font-weight: bold;
+    }
+    
+    .carico-section {
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      padding-top: 1rem;
+    }
+    
+    .carico-main {
+      display: flex;
+      align-items: baseline;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+    
+    .carico-peso {
+      font-size: 2.5rem;
+      font-weight: bold;
+      color: #3b82f6;
+    }
+    
+    .carico-unit {
+      font-size: 1rem;
+      opacity: 0.6;
+    }
+    
+    .serie-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+      gap: 0.5rem;
+      margin-top: 1rem;
+    }
+    
+    .serie-box {
+      background: rgba(0, 0, 0, 0.3);
+      border-radius: 0.5rem;
+      padding: 0.8rem;
+      text-align: center;
+    }
+    
+    .serie-label {
+      font-size: 0.7rem;
+      opacity: 0.6;
+      margin-bottom: 0.3rem;
+    }
+    
+    .serie-reps {
+      font-size: 1.3rem;
+      font-weight: bold;
+    }
+    
+    .serie-unit {
+      font-size: 0.7rem;
+      opacity: 0.6;
+      margin-top: 0.2rem;
+    }
+    
+    .notes-box {
+      background: rgba(234, 179, 8, 0.2);
+      border: 1px solid rgba(234, 179, 8, 0.5);
+      border-radius: 1rem;
+      padding: 1rem;
+    }
+    
+    .notes-title {
+      font-size: 0.7rem;
+      text-transform: uppercase;
+      color: #fbbf24;
+      font-weight: bold;
+      margin-bottom: 0.5rem;
+    }
+    
+    .notes-text {
+      font-size: 0.9rem;
+      color: #fef3c7;
+      line-height: 1.5;
+    }
+    
+    .bottom-nav {
+      background: rgba(0, 0, 0, 0.3);
+      padding: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .nav-btn {
+      background: #3b82f6;
+      border: none;
+      border-radius: 50%;
+      width: 3.5rem;
+      height: 3.5rem;
+      color: white;
+      font-size: 1.5rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+    
+    .nav-btn:active {
+      transform: scale(0.9);
+    }
+    
+    .nav-btn:disabled {
+      background: rgba(255, 255, 255, 0.1);
+      color: rgba(255, 255, 255, 0.3);
+      cursor: not-allowed;
+    }
+    
+    .nav-dots {
+      display: flex;
+      gap: 0.3rem;
+      flex: 1;
+      justify-content: center;
+      padding: 0 1rem;
+    }
+    
+    .nav-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: rgba(255, 255, 255, 0.3);
+      border: none;
+      padding: 0;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .nav-dot.active {
+      width: 32px;
+      border-radius: 4px;
+      background: #3b82f6;
+    }
+    
+    .footer-tip {
+      text-align: center;
+      color: rgba(255, 255, 255, 0.5);
+      font-size: 0.85rem;
+      margin-top: 1rem;
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body>
+
+<div class="screen active home-screen" id="homeScreen">
+  <div class="home-title">
+    <h1>💪 Allenamento</h1>
+    <div class="home-subtitle">Programma Roberto Mellone</div>
+    <div class="home-info">Personal Trainer: Alex Cassoni</div>
+  </div>
+  
+  <div class="day-buttons">
+    <button class="day-btn" onclick="selectDay('A')">
+      <div class="day-name">Giorno A</div>
+      <div class="day-count" id="countA">9 esercizi</div>
+    </button>
+    <button class="day-btn" onclick="selectDay('B')">
+      <div class="day-name">Giorno B</div>
+      <div class="day-count" id="countB">10 esercizi</div>
+    </button>
+    <button class="day-btn" onclick="selectDay('C')">
+      <div class="day-name">Giorno C</div>
+      <div class="day-count" id="countC">9 esercizi</div>
+    </button>
+  </div>
+  
+  <div class="footer-tip">
+    Swipe → per navigare tra gli esercizi<br>
+    Tutte le serie a cedimento
+  </div>
+</div>
+
+<div class="screen exercise-screen" id="exerciseScreen">
+  <div class="top-bar">
+    <button class="home-btn" onclick="goHome()">🏠</button>
+    <div class="top-info">
+      <div class="top-day" id="topDay">Giorno A</div>
+      <div class="top-progress" id="topProgress">Esercizio 1 di 9</div>
+    </div>
+    <div style="width: 2.5rem;"></div>
+  </div>
+  
+  <div class="progress-bar">
+    <div class="progress-fill" id="progressFill" style="width: 0%"></div>
+  </div>
+  
+  <div class="exercise-content" id="exerciseContent">
+    <!-- Contenuto dinamico -->
+  </div>
+  
+  <div class="bottom-nav">
+    <button class="nav-btn" id="prevBtn" onclick="prevExercise()">‹</button>
+    <div class="nav-dots" id="navDots"></div>
+    <button class="nav-btn" id="nextBtn" onclick="nextExercise()">›</button>
+  </div>
+</div>
+
+<script>
+const workoutData = {
+  A: [
+    {
+      nome: "Chest Press Convergente",
+      serie: "3 x 8/10",
+      recupero: "3\"",
+      note: "Discesa lenta e controllata, gomiti in linea, spalle basse",
+      carico: "25(10-10-9)",
+      tipo: "macchina",
+      macchina: "Chest Press Convergente Technogym"
+    },
+    {
+      nome: "Lat Machine con Triangolo",
+      serie: "3 x 7/9",
+      recupero: "2\"",
+      note: "Avambraccio perpendicolare al terreno",
+      carico: "40(9-10-10)",
+      tipo: "macchina",
+      macchina: "Lat Machine Technogym"
+    },
+    {
+      nome: "Leg Press Orizzontale",
+      serie: "3 x 8/10",
+      recupero: "3\"",
+      note: "Max profondità, 1 sec di fermo in buca",
+      carico: "70(10-10-10)",
+      tipo: "macchina",
+      macchina: "Leg Press Horizontal Technogym"
+    },
+    {
+      nome: "Lento Avanti con Manubri",
+      serie: "2 x 6/9",
+      recupero: "2\"",
+      note: "Gomiti avanti e perpendicolari al terreno, max allungamento",
+      carico: "6(10) 8(9)",
+      tipo: "pesi",
+      macchina: "Manubri"
+    },
+    {
+      nome: "Curl con Corda Cavo Basso",
+      serie: "2 x 8/10",
+      recupero: "2\"",
+      note: "Gomiti fissi, 1 sec di contrazione di picco",
+      carico: "12,5(10-10)",
+      tipo: "cavi",
+      macchina: "Cable Station Technogym"
+    },
+    {
+      nome: "French Press con Manubri",
+      serie: "2 x 8/10",
+      recupero: "2\"",
+      note: "Panca piana, gomiti fermi, manubrio che arriva vicino alle orecchie",
+      carico: "4(10-10)",
+      tipo: "pesi",
+      macchina: "Manubri + Panca"
+    },
+    {
+      nome: "Plank",
+      serie: "3 x 1'",
+      recupero: "1\"",
+      note: "Mantenere schiena dritta",
+      carico: "Corpo libero",
+      tipo: "corpo_libero"
+    },
+    {
+      nome: "Posturale",
+      serie: "5/10 minuti",
+      recupero: "-",
+      note: "Tutto ciò che facciamo assieme",
+      carico: "-",
+      tipo: "corpo_libero"
+    },
+    {
+      nome: "Cardio: Tapis Inclinato",
+      serie: "20 minuti",
+      recupero: "-",
+      note: "Inclinazione minima 7%",
+      carico: "-",
+      tipo: "cardio"
+    }
+  ],
+  B: [
+    {
+      nome: "Step Up",
+      serie: "3 x 8/10",
+      recupero: "2\"",
+      note: "Monopodalico, inizia prima con la gamba debole",
+      carico: "10/12,5",
+      tipo: "pesi",
+      macchina: "Manubri + Step"
+    },
+    {
+      nome: "Adductor Machine",
+      serie: "2 x 10/12",
+      recupero: "1'30\"",
+      note: "",
+      carico: "20",
+      tipo: "macchina",
+      macchina: "Adductor Technogym"
+    },
+    {
+      nome: "Chest Press Incline",
+      serie: "2 x 8/10",
+      recupero: "2\"",
+      note: "Scapole depresse, max allungamento",
+      carico: "20",
+      tipo: "macchina",
+      macchina: "Incline Chest Press Technogym"
+    },
+    {
+      nome: "Pec Fly",
+      serie: "2 x 8/10",
+      recupero: "2\"",
+      note: "Braccia semitese, allungamento max",
+      carico: "10/12,5",
+      tipo: "macchina",
+      macchina: "Pec Fly Technogym"
+    },
+    {
+      nome: "Pulley",
+      serie: "3 x 8/10",
+      recupero: "2\"",
+      note: "Adduzione scapolare completa",
+      carico: "30",
+      tipo: "macchina",
+      macchina: "Low Row Technogym"
+    },
+    {
+      nome: "Alzate Laterali Manubri",
+      serie: "3 x 10/12",
+      recupero: "2\"",
+      note: "Panca 75 gradi, braccia tese, segui il piano scapolare",
+      carico: "5",
+      tipo: "pesi",
+      macchina: "Manubri + Panca"
+    },
+    {
+      nome: "Superset: Faceaway Curl + Push Down",
+      serie: "2 x 10+10",
+      recupero: "2\"",
+      note: "Superset",
+      carico: "12,5 + 10",
+      tipo: "cavi",
+      macchina: "Cable Station Technogym"
+    },
+    {
+      nome: "Crunch con Disco",
+      serie: "3 x 12/15",
+      recupero: "1\"",
+      note: "Non piegare troppo il collo",
+      carico: "10",
+      tipo: "corpo_libero"
+    },
+    {
+      nome: "Posturale",
+      serie: "5/10 minuti",
+      recupero: "-",
+      note: "Tutto ciò che facciamo assieme",
+      carico: "-",
+      tipo: "corpo_libero"
+    },
+    {
+      nome: "Cardio: Bicicletta",
+      serie: "20 minuti",
+      recupero: "-",
+      note: "",
+      carico: "-",
+      tipo: "cardio"
+    }
+  ],
+  C: [
+    {
+      nome: "Spinte con Manubri su Panca Inclinata",
+      serie: "3 x 6/9",
+      recupero: "3\"",
+      note: "Gomiti e polsi a 45 gradi, max allungamento",
+      carico: "9(9-9-9)",
+      tipo: "pesi",
+      macchina: "Manubri + Panca Inclinata"
+    },
+    {
+      nome: "Vertical Traction",
+      serie: "2 x 7/9",
+      recupero: "2\"",
+      note: "Avambraccio perpendicolare al terreno",
+      carico: "35(12) 40(9)",
+      tipo: "macchina",
+      macchina: "Lat Machine Technogym"
+    },
+    {
+      nome: "Low Row",
+      serie: "2 x 7/9",
+      recupero: "2\"",
+      note: "Adduzione scapolare",
+      carico: "35(10) 45(10)",
+      tipo: "macchina",
+      macchina: "Low Row Technogym"
+    },
+    {
+      nome: "Superset: Leg Extension + Leg Curl",
+      serie: "2 x 8/10 + 8/10",
+      recupero: "2\"",
+      note: "Superset",
+      carico: "27,5(12-12)",
+      tipo: "macchina",
+      macchina: "Leg Extension + Leg Curl Technogym"
+    },
+    {
+      nome: "Shoulder Press",
+      serie: "2 x 6/9",
+      recupero: "2\"",
+      note: "Gomiti in linea di spinta, bilanciere che arriva sopra la testa",
+      carico: "15(10-7)",
+      tipo: "macchina",
+      macchina: "Shoulder Press Technogym"
+    },
+    {
+      nome: "Superset: Curl su Panca 45 + Push Down",
+      serie: "3 x 10+10",
+      recupero: "2\"",
+      note: "Superset",
+      carico: "7(10-10) 15(12-12)",
+      tipo: "cavi",
+      macchina: "Cable Station + Panca"
+    },
+    {
+      nome: "Plank",
+      serie: "3 x 1'",
+      recupero: "1\"",
+      note: "Mantenere schiena dritta",
+      carico: "Corpo libero",
+      tipo: "corpo_libero"
+    },
+    {
+      nome: "Posturale",
+      serie: "5/10 minuti",
+      recupero: "-",
+      note: "Tutto ciò che facciamo assieme",
+      carico: "-",
+      tipo: "corpo_libero"
+    },
+    {
+      nome: "Cardio: Tapis Inclinato",
+      serie: "20 minuti",
+      recupero: "-",
+      note: "Inclinazione minima 7%",
+      carico: "-",
+      tipo: "cardio"
+    }
+  ]
+};
+
+let currentDay = null;
+let currentExercise = 0;
+
+function selectDay(day) {
+  currentDay = day;
+  currentExercise = 0;
+  document.getElementById('homeScreen').classList.remove('active');
+  document.getElementById('exerciseScreen').classList.add('active');
+  updateExerciseScreen();
+}
+
+function goHome() {
+  document.getElementById('exerciseScreen').classList.remove('active');
+  document.getElementById('homeScreen').classList.add('active');
+  currentDay = null;
+  currentExercise = 0;
+}
+
+function prevExercise() {
+  if (currentExercise > 0) {
+    currentExercise--;
+    updateExerciseScreen();
+  }
+}
+
+function nextExercise() {
+  const exercises = workoutData[currentDay];
+  if (currentExercise < exercises.length - 1) {
+    currentExercise++;
+    updateExerciseScreen();
+  }
+}
+
+function jumpToExercise(index) {
+  currentExercise = index;
+  updateExerciseScreen();
+}
+
+function parseCarico(carico) {
+  if (carico === "Corpo libero" || carico === "-") {
+    return { peso: null, serie: [] };
+  }
+  
+  const match = carico.match(/^([\d,\.]+)\((.+)\)$/);
+  if (match) {
+    const peso = match[1];
+    const reps = match[2].split('-').map(r => r.trim());
+    return { peso, serie: reps };
+  }
+  
+  return { peso: carico, serie: [] };
+}
+
+function getTypeLabel(tipo) {
+  const labels = {
+    macchina: 'Macchina',
+    pesi: 'Pesi Liberi',
+    cavi: 'Cavi',
+    corpo_libero: 'Corpo Libero',
+    cardio: 'Cardio'
+  };
+  return labels[tipo] || '';
+}
+
+function updateExerciseScreen() {
+  const exercises = workoutData[currentDay];
+  const exercise = exercises[currentExercise];
+  const total = exercises.length;
+  const progress = ((currentExercise + 1) / total) * 100;
+  
+  // Update top bar
+  document.getElementById('topDay').textContent = `Giorno ${currentDay}`;
+  document.getElementById('topProgress').textContent = `Esercizio ${currentExercise + 1} di ${total}`;
+  document.getElementById('progressFill').style.width = `${progress}%`;
+  
+  // Update navigation buttons
+  document.getElementById('prevBtn').disabled = (currentExercise === 0);
+  document.getElementById('nextBtn').disabled = (currentExercise === total - 1);
+  
+  // Update dots
+  const dotsHtml = exercises.map((_, idx) => 
+    `<button class="nav-dot ${idx === currentExercise ? 'active' : ''}" onclick="jumpToExercise(${idx})"></button>`
+  ).join('');
+  document.getElementById('navDots').innerHTML = dotsHtml;
+  
+  // Parse carico
+  const { peso, serie } = parseCarico(exercise.carico);
+  
+  // Build exercise content
+  let html = `
+    <div class="exercise-header">
+      <span class="type-badge type-${exercise.tipo}">${getTypeLabel(exercise.tipo)}</span>
+      <span class="day-label">Giorno ${currentDay}</span>
+      <div class="exercise-name">${exercise.nome}</div>
+      ${exercise.macchina ? `<div class="machine-name">${exercise.macchina}</div>` : ''}
+    </div>
+  `;
+  
+  // Add image placeholder for machines
+  if (exercise.tipo !== 'corpo_libero' && exercise.tipo !== 'cardio') {
+    html += `
+      <div class="exercise-image">
+        <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Crect fill='%23e5e7eb' width='200' height='200'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='%239ca3af' font-family='sans-serif' font-size='14'%3ETechnogym%3C/text%3E%3C/svg%3E" alt="${exercise.nome}">
+      </div>
+    `;
+  }
+  
+  // Info box
+  html += `
+    <div class="info-box">
+      <div class="info-row">
+        <div class="info-item">
+          <label>Serie</label>
+          <value>${exercise.serie}</value>
+        </div>
+        <div class="info-item">
+          <label>Recupero</label>
+          <value>${exercise.recupero}</value>
+        </div>
+      </div>
+  `;
+  
+  // Carico section
+  if (peso && peso !== '-') {
+    html += `
+      <div class="carico-section">
+        <label style="font-size: 0.7rem; text-transform: uppercase; opacity: 0.6; margin-bottom: 0.5rem; display: block;">Carico</label>
+        <div class="carico-main">
+          <span class="carico-peso">${peso}</span>
+          <span class="carico-unit">kg</span>
+        </div>
+    `;
+    
+    if (serie.length > 0) {
+      html += `<div class="serie-grid">`;
+      serie.forEach((reps, idx) => {
+        html += `
+          <div class="serie-box">
+            <div class="serie-label">Serie ${idx + 1}</div>
+            <div class="serie-reps">${reps}</div>
+            <div class="serie-unit">rip</div>
+          </div>
+        `;
+      });
+      html += `</div>`;
+    }
+    
+    html += `</div>`;
+  }
+  
+  html += `</div>`;
+  
+  // Notes
+  if (exercise.note && exercise.note !== '-') {
+    html += `
+      <div class="notes-box">
+        <div class="notes-title">Note Tecniche</div>
+        <div class="notes-text">${exercise.note}</div>
+      </div>
+    `;
+  }
+  
+  document.getElementById('exerciseContent').innerHTML = html;
+  document.getElementById('exerciseContent').scrollTop = 0;
+}
+
+// Touch swipe support
+let touchStartX = 0;
+let touchEndX = 0;
+
+document.addEventListener('touchstart', e => {
+  touchStartX = e.changedTouches[0].screenX;
+}, false);
+
+document.addEventListener('touchend', e => {
+  touchEndX = e.changedTouches[0].screenX;
+  handleSwipe();
+}, false);
+
+function handleSwipe() {
+  const swipeThreshold = 50;
+  const diff = touchStartX - touchEndX;
+  
+  if (Math.abs(diff) > swipeThreshold) {
+    if (diff > 0) {
+      // Swipe left - next
+      nextExercise();
+    } else {
+      // Swipe right - previous
+      prevExercise();
+    }
+  }
+}
+</script>
+
+</body>
+</html>
