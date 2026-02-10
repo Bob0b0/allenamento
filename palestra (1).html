@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <title>WorkOut Roberto</title>
+  <style>
+    :root { --safe-bottom: env(safe-area-inset-bottom); --blue: #3b82f6; }
+    * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    body { font-family: -apple-system, sans-serif; height: 100vh; background: #0f172a; color: white; overflow: hidden; }
+    .screen { display: none; height: 100vh; flex-direction: column; }
+    .screen.active { display: flex; }
+    .home-screen { background: radial-gradient(circle at top, #1e293b, #0f172a); justify-content: center; padding: 20px; }
+    .day-btn { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); border-radius: 20px; padding: 30px; color: white; margin-bottom: 15px; text-align: center; font-size: 1.5rem; font-weight: bold; }
+    .top-bar { padding: calc(50px + env(safe-area-inset-top)) 20px 20px; display: flex; align-items: center; background: rgba(0,0,0,0.4); border-bottom: 1px solid rgba(255,255,255,0.1); }
+    .exercise-content { flex: 1; overflow-y: auto; padding: 20px; padding-bottom: 160px; }
+    .image-container { width: 100%; height: 200px; background: rgba(255,255,255,0.03); border-radius: 20px; margin-bottom: 20px; display: flex; align-items: center; justify-content: center; overflow: hidden; border: 2px dashed rgba(255,255,255,0.1); }
+    .image-container img { width: 100%; height: 100%; object-fit: cover; }
+    .info-box { background: rgba(255,255,255,0.05); border-radius: 15px; padding: 15px; border: 1px solid rgba(255,255,255,0.1); }
+    input, textarea { background: rgba(255,255,255,0.1); border: 1px solid var(--blue); color: white; border-radius: 8px; padding: 8px; width: 100%; font-size: 1rem; margin-top: 5px; }
+    .bottom-nav-container { position: absolute; bottom: calc(40px + var(--safe-bottom)); left: 0; right: 0; padding: 0 20px; }
+    .bottom-nav { background: rgba(30, 41, 59, 0.95); backdrop-filter: blur(15px); border-radius: 40px; padding: 10px; display: flex; align-items: center; justify-content: space-between; border: 1px solid rgba(255,255,255,0.1); }
+    .nav-btn { background: var(--blue); border: none; border-radius: 50%; width: 50px; height: 50px; color: white; font-size: 1.5rem; display: flex; align-items: center; justify-content: center; }
+    .nav-btn:disabled { opacity: 0.2; }
+    .edit-btn { background: var(--blue); border: none; color: white; padding: 8px 15px; border-radius: 10px; font-weight: bold; }
+    .edit-btn.active { background: #ef4444; }
+  </style>
+</head>
+<body>
+
+<div id="home" class="screen active home-screen">
+  <h1 style="text-align:center; margin-bottom:40px;">WorkOut Roberto</h1>
+  <div onclick="start('A')" class="day-btn">GIORNO A</div>
+  <div onclick="start('B')" class="day-btn">GIORNO B</div>
+  <div onclick="start('C')" class="day-btn">GIORNO C</div>
+</div>
+
+<div id="exercise" class="screen">
+  <div class="top-bar">
+    <button onclick="location.reload()" style="background:none; border:none; font-size:1.5rem;">🏠</button>
+    <div style="flex:1; text-align:center;"><b id="d-name"></b><br><small id="d-prog"></small></div>
+    <button id="e-btn" class="edit-btn" onclick="toggleEdit()">Modifica</button>
+  </div>
+  <div class="exercise-content" id="content"></div>
+  <div class="bottom-nav-container">
+    <div class="bottom-nav">
+      <button class="nav-btn" id="prev" onclick="change(-1)">‹</button>
+      <div id="dots" style="display:flex; gap:5px;"></div>
+      <button class="nav-btn" id="next" onclick="change(1)">›</button>
+    </div>
+  </div>
+</div>
+
+<input type="file" id="f-in" style="display:none" accept="image/*" onchange="upImg(event)">
+
+<script>
+const dataInit = {
+  A: [
+    { n: "Chest Press Convergente", s: "3 x 8/10", c: "25", r: "3'", nt: "Discesa controllata", img: null },
+    { n: "Lat Machine Triangolo", s: "3 x 7/9", c: "40", r: "2'", nt: "Avambraccio perpendicolare", img: null },
+    { n: "Leg Press Orizzontale", s: "3 x 8/10", c: "70", r: "3'", nt: "Fermo in buca", img: null },
+    { n: "Lento Manubri", s: "2 x 6/9", c: "8", r: "2'", nt: "Gomiti avanti", img: null },
+    { n: "Curl Cavo Basso", s: "2 x 8/10", c: "12.5", r: "2'", nt: "Gomiti fissi", img: null },
+    { n: "French Press", s: "2 x 8/10", c: "4", r: "2'", nt: "Gomiti fermi", img: null },
+    { n: "Plank", s: "3 x 1'", c: "0", r: "1'", nt: "Schiena dritta", img: null },
+    { n: "Posturale", s: "5/10 min", c: "-", r: "-", nt: "-", img: null },
+    { n: "Cardio Tapis", s: "20 min", c: "-", r: "-", nt: "Inclinazione 7%", img: null }
+  ],
+  B: [
+    { n: "Step Up", s: "3 x 8/10", c: "10", r: "2'", nt: "Gamba debole prima", img: null },
+    { n: "Adductor Machine", s: "2 x 10/12", c: "20", r: "1.5'", nt: "", img: null },
+    { n: "Chest Press Incline", s: "2 x 8/10", c: "20", r: "2'", nt: "Scapole depresse", img: null },
+    { n: "Pec Fly", s: "2 x 8/10", c: "10", r: "2'", nt: "Braccia semitese", img: null },
+    { n: "Pulley", s: "3 x 8/10", c: "30", r: "2'", nt: "Adduzione scapole", img: null },
+    { n: "Alzate Laterali", s: "3 x 10/12", c: "5", r: "2'", nt: "Panca 75°", img: null },
+    { n: "Curl + Push Down", s: "2 x 10+10", c: "12+10", r: "2'", nt: "Superset", img: null },
+    { n: "Crunch Disco", s: "3 x 12/15", c: "10", r: "1'", nt: "-", img: null },
+    { n: "Posturale", s: "5 min", c: "-", r: "-", nt: "-", img: null },
+    { n: "Bici", s: "20 min", c: "-", r: "-", nt: "-", img: null }
+  ],
+  C: [
+    { n: "Spinte Panca Inclinata", s: "3 x 6/9", c: "9", r: "3'", nt: "Polsi 45°", img: null },
+    { n: "Vertical Traction", s: "2 x 7/9", c: "35", r: "2'", nt: "Gomiti bassi", img: null },
+    { n: "Low Row", s: "2 x 7/9", c: "35", r: "2'", nt: "Scapole", img: null },
+    { n: "Leg Ext + Curl", s: "2 x 10+10", c: "27", r: "2'", nt: "Superset", img: null },
+    { n: "Shoulder Press", s: "2 x 6/9", c: "15", r: "2'", nt: "-", img: null },
+    { n: "Curl 45° + Push Down", s: "3 x 10+10", c: "7+15", r: "2'", nt: "Superset", img: null },
+    { n: "Plank", s: "3 x 1'", c: "0", r: "1'", nt: "-", img: null },
+    { n: "Posturale", s: "10 min", c: "-", r: "-", nt: "-", img: null },
+    { n: "Tapis", s: "20 min", c: "-", r: "-", nt: "7%", img: null }
+  ]
+};
+
+let db = JSON.parse(localStorage.getItem('wk_rob')) || dataInit;
+let curD = 'A', curE = 0, edit = false;
+
+function start(d) { curD = d; curE = 0; document.getElementById('home').classList.remove('active'); document.getElementById('exercise').classList.add('active'); render(); }
+function render() {
+  const ex = db[curD][curE];
+  document.getElementById('d-name').innerText = "Giorno " + curD;
+  document.getElementById('d-prog').innerText = "Es " + (curE+1) + " di " + db[curD].length;
+  document.getElementById('prev').disabled = curE === 0;
+  document.getElementById('next').disabled = curE === db[curD].length-1;
+  document.getElementById('content').innerHTML = `
+    <div class="image-container" onclick="document.getElementById('f-in').click()">
+      ${ex.img ? `<img src="${ex.img}">` : `📸 Foto`}
+    </div>
+    ${edit ? `<input type="text" value="${ex.n}" onchange="up('n',this.value)">` : `<h2>${ex.n}</h2>`}
+    <div class="info-box" style="margin-top:15px; display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+      <div><small>SERIE</small>${edit ? `<input type="text" value="${ex.s}" onchange="up('s',this.value)">` : `<div>${ex.s}</div>`}</div>
+      <div><small>PESO (KG)</small>${edit ? `<input type="text" value="${ex.c}" onchange="up('c',this.value)">` : `<div style="color:var(--blue); font-weight:bold;">${ex.c}</div>`}</div>
+    </div>
+    <div class="info-box" style="margin-top:10px;">
+      <small>NOTE</small>${edit ? `<textarea onchange="up('nt',this.value)">${ex.nt}</textarea>` : `<div>${ex.nt}</div>`}
+    </div>
+  `;
+}
+function up(f,v) { db[curD][curE][f] = v; save(); }
+function save() { localStorage.setItem('wk_rob', JSON.stringify(db)); }
+function toggleEdit() { edit = !edit; document.getElementById('e-btn').innerText = edit ? "Salva" : "Modifica"; document.getElementById('e-btn').classList.toggle('active'); render(); }
+function change(v) { curE += v; render(); }
+function upImg(e) {
+  const f = e.target.files[0];
+  const r = new FileReader();
+  r.onload = function(ev) { db[curD][curE].img = ev.target.result; save(); render(); };
+  r.readAsDataURL(f);
+}
+</script>
+</body>
+</html>
