@@ -163,8 +163,9 @@
     }
     
     .user-badge {
-      background: rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.3);
       backdrop-filter: blur(10px);
+      border: 2px solid rgba(255, 255, 255, 0.4);
       border-radius: 1rem;
       padding: 1rem;
       margin-bottom: 2rem;
@@ -209,9 +210,9 @@
     }
     
     .day-btn {
-      background: rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.25);
       backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.2);
+      border: 2px solid rgba(255, 255, 255, 0.4);
       border-radius: 1.5rem;
       padding: 2rem;
       color: white;
@@ -224,7 +225,7 @@
     
     .day-btn:active {
       transform: scale(0.95);
-      background: rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.35);
     }
     
     .day-edit-btn {
@@ -740,17 +741,17 @@
   
   <div class="day-buttons">
     <button class="day-btn" onclick="selectDay('A')">
-      <button class="day-edit-btn" onclick="event.stopPropagation(); editDay('A')">✏️ Modifica</button>
+      <button class="day-edit-btn" onclick="event.stopPropagation(); editDay('A')">✏️</button>
       <div class="day-name">Giorno A</div>
       <div class="day-count" id="countA">0 esercizi</div>
     </button>
     <button class="day-btn" onclick="selectDay('B')">
-      <button class="day-edit-btn" onclick="event.stopPropagation(); editDay('B')">✏️ Modifica</button>
+      <button class="day-edit-btn" onclick="event.stopPropagation(); editDay('B')">✏️</button>
       <div class="day-name">Giorno B</div>
       <div class="day-count" id="countB">0 esercizi</div>
     </button>
     <button class="day-btn" onclick="selectDay('C')">
-      <button class="day-edit-btn" onclick="event.stopPropagation(); editDay('C')">✏️ Modifica</button>
+      <button class="day-edit-btn" onclick="event.stopPropagation(); editDay('C')">✏️</button>
       <div class="day-name">Giorno C</div>
       <div class="day-count" id="countC">0 esercizi</div>
     </button>
@@ -808,7 +809,11 @@
     <form id="editExerciseForm" onsubmit="return false;">
       <div class="form-group">
         <label>Nome esercizio</label>
-        <input type="text" id="editExName" required>
+        <select id="editExNameSelect" onchange="handleExerciseSelect()">
+          <option value="">-- Scegli esercizio --</option>
+          <option value="__custom__">✏️ Scrivi manualmente</option>
+        </select>
+        <input type="text" id="editExName" style="display: none; margin-top: 0.5rem;" placeholder="Nome esercizio personalizzato">
       </div>
       <div class="form-group">
         <label>Tipo</label>
@@ -821,8 +826,9 @@
         </select>
       </div>
       <div class="form-group">
-        <label>Nome macchina/attrezzatura (opzionale)</label>
-        <input type="text" id="editExMacchina">
+        <label>Nome macchina/attrezzatura</label>
+        <input type="text" id="editExMacchina" readonly style="opacity: 0.7;">
+        <small style="display: block; margin-top: 0.3rem; font-size: 0.75rem; opacity: 0.6;">Auto-compilato dalla scelta esercizio</small>
       </div>
       <div class="form-group">
         <label>Serie x Ripetizioni (es. 3 x 8/10)</label>
@@ -998,6 +1004,73 @@ document.getElementById('photoInput').addEventListener('change', function(e) {
 });
 
 // Edit Day functionality
+function populateExerciseSelect() {
+  const select = document.getElementById('editExNameSelect');
+  const allExercises = [];
+  
+  // Collect all unique exercises from default data
+  Object.keys(defaultWorkoutData).forEach(day => {
+    defaultWorkoutData[day].forEach(ex => {
+      if (!allExercises.find(e => e.nome === ex.nome)) {
+        allExercises.push(ex);
+      }
+    });
+  });
+  
+  // Sort alphabetically
+  allExercises.sort((a, b) => a.nome.localeCompare(b.nome));
+  
+  // Keep first two options, add exercises
+  const currentOptions = select.innerHTML;
+  const exerciseOptions = allExercises.map(ex => 
+    `<option value="${encodeURIComponent(JSON.stringify(ex))}">${ex.nome}</option>`
+  ).join('');
+  
+  select.innerHTML = currentOptions.split('</option>').slice(0, 2).join('</option>') + '</option>' + exerciseOptions;
+}
+
+function handleExerciseSelect() {
+  const select = document.getElementById('editExNameSelect');
+  const customInput = document.getElementById('editExName');
+  const machineInput = document.getElementById('editExMacchina');
+  
+  if (select.value === '__custom__') {
+    // Show custom input
+    customInput.style.display = 'block';
+    customInput.required = true;
+    customInput.value = '';
+    machineInput.value = '';
+    machineInput.removeAttribute('readonly');
+    machineInput.style.opacity = '1';
+  } else if (select.value === '') {
+    // Nothing selected
+    customInput.style.display = 'none';
+    customInput.required = false;
+    machineInput.value = '';
+  } else {
+    // Exercise selected from default
+    customInput.style.display = 'none';
+    customInput.required = false;
+    
+    try {
+      const exercise = JSON.parse(decodeURIComponent(select.value));
+      customInput.value = exercise.nome;
+      
+      // Auto-fill fields
+      document.getElementById('editExTipo').value = exercise.tipo;
+      machineInput.value = exercise.macchina || '';
+      machineInput.setAttribute('readonly', true);
+      machineInput.style.opacity = '0.7';
+      document.getElementById('editExSerie').value = exercise.serie;
+      document.getElementById('editExCarico').value = exercise.carico;
+      document.getElementById('editExRecupero').value = exercise.recupero;
+      document.getElementById('editExNote').value = exercise.note || '';
+    } catch (e) {
+      console.error('Error parsing exercise data', e);
+    }
+  }
+}
+
 function editDay(day) {
   editingDay = day;
   const workout = getWorkoutData(currentUser);
@@ -1031,10 +1104,18 @@ function closeEditDayModal() {
 function addNewExercise() {
   editingExerciseIndex = -1; // -1 means new exercise
   
+  // Populate exercise select
+  populateExerciseSelect();
+  
   // Clear form
+  document.getElementById('editExNameSelect').value = '';
   document.getElementById('editExName').value = '';
+  document.getElementById('editExName').style.display = 'none';
+  document.getElementById('editExName').required = false;
   document.getElementById('editExTipo').value = 'macchina';
   document.getElementById('editExMacchina').value = '';
+  document.getElementById('editExMacchina').setAttribute('readonly', true);
+  document.getElementById('editExMacchina').style.opacity = '0.7';
   document.getElementById('editExSerie').value = '';
   document.getElementById('editExCarico').value = '';
   document.getElementById('editExRecupero').value = '';
@@ -1048,6 +1129,34 @@ function editExercise(index) {
   editingExerciseIndex = index;
   const workout = getWorkoutData(currentUser);
   const ex = workout[editingDay][index];
+  
+  // Populate exercise select
+  populateExerciseSelect();
+  
+  // Try to find exercise in default list
+  let foundInDefaults = false;
+  const select = document.getElementById('editExNameSelect');
+  for (let i = 0; i < select.options.length; i++) {
+    if (select.options[i].value && select.options[i].value !== '__custom__') {
+      try {
+        const optionEx = JSON.parse(decodeURIComponent(select.options[i].value));
+        if (optionEx.nome === ex.nome) {
+          select.value = select.options[i].value;
+          foundInDefaults = true;
+          break;
+        }
+      } catch (e) {}
+    }
+  }
+  
+  if (!foundInDefaults) {
+    // Custom exercise, use manual input
+    select.value = '__custom__';
+    document.getElementById('editExName').style.display = 'block';
+    document.getElementById('editExName').required = true;
+    document.getElementById('editExMacchina').removeAttribute('readonly');
+    document.getElementById('editExMacchina').style.opacity = '1';
+  }
   
   // Fill form
   document.getElementById('editExName').value = ex.nome;
@@ -1063,8 +1172,18 @@ function editExercise(index) {
 }
 
 function saveEditedExercise() {
+  // Get name from select or custom input
+  const select = document.getElementById('editExNameSelect');
+  let nomeEsercizio = '';
+  
+  if (select.value === '__custom__' || select.value === '') {
+    nomeEsercizio = document.getElementById('editExName').value.trim();
+  } else {
+    nomeEsercizio = document.getElementById('editExName').value.trim();
+  }
+  
   const newEx = {
-    nome: document.getElementById('editExName').value.trim(),
+    nome: nomeEsercizio,
     tipo: document.getElementById('editExTipo').value,
     macchina: document.getElementById('editExMacchina').value.trim(),
     serie: document.getElementById('editExSerie').value.trim(),
@@ -1089,8 +1208,14 @@ function saveEditedExercise() {
   }
   
   saveWorkoutData(currentUser, workout);
+  
+  // Close modal and navigate back
   closeEditExerciseModal();
-  editDay(editingDay); // Refresh list
+  
+  // If we came from day edit modal, refresh it
+  if (document.getElementById('editDayModal').classList.contains('active')) {
+    editDay(editingDay);
+  }
 }
 
 function deleteExercise() {
@@ -1290,6 +1415,34 @@ function quickEditExercise() {
   const workout = getWorkoutData(currentUser);
   const ex = workout[currentDay][currentExercise];
   
+  // Populate exercise select
+  populateExerciseSelect();
+  
+  // Try to find exercise in default list
+  let foundInDefaults = false;
+  const select = document.getElementById('editExNameSelect');
+  for (let i = 0; i < select.options.length; i++) {
+    if (select.options[i].value && select.options[i].value !== '__custom__') {
+      try {
+        const optionEx = JSON.parse(decodeURIComponent(select.options[i].value));
+        if (optionEx.nome === ex.nome) {
+          select.value = select.options[i].value;
+          foundInDefaults = true;
+          break;
+        }
+      } catch (e) {}
+    }
+  }
+  
+  if (!foundInDefaults) {
+    // Custom exercise
+    select.value = '__custom__';
+    document.getElementById('editExName').style.display = 'block';
+    document.getElementById('editExName').required = true;
+    document.getElementById('editExMacchina').removeAttribute('readonly');
+    document.getElementById('editExMacchina').style.opacity = '1';
+  }
+  
   document.getElementById('editExName').value = ex.nome;
   document.getElementById('editExTipo').value = ex.tipo;
   document.getElementById('editExMacchina').value = ex.macchina || '';
@@ -1300,6 +1453,20 @@ function quickEditExercise() {
   
   document.getElementById('exerciseScreen').classList.remove('active');
   document.getElementById('editExerciseModal').classList.add('active');
+}
+
+function closeEditExerciseModal() {
+  document.getElementById('editExerciseModal').classList.remove('active');
+  
+  // Check if we should go back to exercise view or day edit modal
+  if (currentDay && currentExercise >= 0) {
+    // We were in exercise view
+    document.getElementById('exerciseScreen').classList.add('active');
+    updateExerciseScreen();
+  } else {
+    // We were in day edit modal
+    document.getElementById('editDayModal').classList.add('active');
+  }
 }
 
 // Touch swipe support
@@ -1327,23 +1494,6 @@ function handleSwipe() {
     }
   }
 }
-
-// Override closeEditExerciseModal to handle back navigation
-const originalCloseEditExerciseModal = closeEditExerciseModal;
-closeEditExerciseModal = function() {
-  const wasInExerciseView = document.getElementById('exerciseScreen').classList.contains('active') === false && document.getElementById('editDayModal').classList.contains('active') === false;
-  
-  document.getElementById('editExerciseModal').classList.remove('active');
-  
-  if (wasInExerciseView) {
-    // Came from exercise view, go back to exercise
-    document.getElementById('exerciseScreen').classList.add('active');
-    updateExerciseScreen(); // Refresh in case changes were made
-  } else {
-    // Came from day edit modal
-    document.getElementById('editDayModal').classList.add('active');
-  }
-};
 
 // Initialize app
 window.addEventListener('DOMContentLoaded', () => {
