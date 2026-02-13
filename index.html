@@ -11,7 +11,7 @@
   <link rel="apple-touch-icon" sizes="180x180" href="icon.png">
   <link rel="apple-touch-icon" sizes="167x167" href="icon.png">
   <link rel="icon" type="image/png" href="icon.png">
-  <title>Allenamento Roberto</title>
+  <title>Allenamento</title>
   <style>
     * {
       margin: 0;
@@ -37,6 +37,87 @@
       display: flex;
     }
     
+    /* Setup Screen */
+    .setup-screen {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+      justify-content: center;
+      align-items: center;
+      padding: 2rem;
+    }
+    
+    .setup-box {
+      background: rgba(255, 255, 255, 0.95);
+      border-radius: 2rem;
+      padding: 2.5rem;
+      max-width: 400px;
+      width: 100%;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    }
+    
+    .setup-title {
+      text-align: center;
+      margin-bottom: 2rem;
+    }
+    
+    .setup-title h1 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      color: #333;
+    }
+    
+    .setup-title p {
+      color: #666;
+      font-size: 1rem;
+    }
+    
+    .form-group {
+      margin-bottom: 1.5rem;
+    }
+    
+    .form-group label {
+      display: block;
+      font-weight: bold;
+      color: #333;
+      margin-bottom: 0.5rem;
+      font-size: 0.9rem;
+    }
+    
+    .form-group input {
+      width: 100%;
+      padding: 1rem;
+      border: 2px solid #e0e0e0;
+      border-radius: 1rem;
+      font-size: 1rem;
+      transition: all 0.3s;
+    }
+    
+    .form-group input:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+    
+    .setup-btn {
+      width: 100%;
+      padding: 1.2rem;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      border: none;
+      border-radius: 1rem;
+      font-size: 1.1rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    
+    .setup-btn:active {
+      transform: scale(0.98);
+    }
+    
+    .setup-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+    
     /* Home Screen */
     .home-screen {
       background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
@@ -48,7 +129,7 @@
     .home-title {
       text-align: center;
       color: white;
-      margin-bottom: 3rem;
+      margin-bottom: 2rem;
     }
     
     .home-title h1 {
@@ -66,6 +147,42 @@
       font-size: 0.9rem;
       opacity: 0.8;
       margin-top: 0.5rem;
+    }
+    
+    .user-badge {
+      background: rgba(255, 255, 255, 0.2);
+      backdrop-filter: blur(10px);
+      border-radius: 1rem;
+      padding: 1rem;
+      margin-bottom: 2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .user-info {
+      flex: 1;
+    }
+    
+    .user-name {
+      font-size: 1.1rem;
+      font-weight: bold;
+      margin-bottom: 0.2rem;
+    }
+    
+    .user-trainer {
+      font-size: 0.85rem;
+      opacity: 0.8;
+    }
+    
+    .change-user-btn {
+      background: rgba(255, 255, 255, 0.3);
+      border: none;
+      border-radius: 0.5rem;
+      padding: 0.5rem 1rem;
+      color: white;
+      font-size: 0.85rem;
+      cursor: pointer;
     }
     
     .day-buttons {
@@ -409,7 +526,6 @@
       line-height: 1.5;
     }
     
-    /* Hidden file input */
     #photoInput {
       display: none;
     }
@@ -419,11 +535,39 @@
 
 <input type="file" id="photoInput" accept="image/*">
 
-<div class="screen active home-screen" id="homeScreen">
+<!-- Setup Screen -->
+<div class="screen setup-screen" id="setupScreen">
+  <div class="setup-box">
+    <div class="setup-title">
+      <h1>💪 Benvenuto!</h1>
+      <p>Crea il tuo profilo di allenamento</p>
+    </div>
+    <form id="setupForm" onsubmit="return false;">
+      <div class="form-group">
+        <label for="userName">Il tuo nome</label>
+        <input type="text" id="userName" placeholder="es. Mario Rossi" required>
+      </div>
+      <div class="form-group">
+        <label for="trainerName">Nome del tuo Personal Trainer</label>
+        <input type="text" id="trainerName" placeholder="es. Alex Cassoni" required>
+      </div>
+      <button type="button" class="setup-btn" onclick="saveUserProfile()">Inizia 🚀</button>
+    </form>
+  </div>
+</div>
+
+<!-- Home Screen -->
+<div class="screen home-screen" id="homeScreen">
   <div class="home-title">
     <h1>💪 Allenamento</h1>
-    <div class="home-subtitle">Programma Roberto Mellone</div>
-    <div class="home-info">Personal Trainer: Alex Cassoni</div>
+  </div>
+  
+  <div class="user-badge">
+    <div class="user-info">
+      <div class="user-name" id="displayUserName">Nome Utente</div>
+      <div class="user-trainer" id="displayTrainerName">Personal Trainer</div>
+    </div>
+    <button class="change-user-btn" onclick="changeUser()">Cambia</button>
   </div>
   
   <div class="day-buttons">
@@ -447,6 +591,7 @@
   </div>
 </div>
 
+<!-- Exercise Screen -->
 <div class="screen exercise-screen" id="exerciseScreen">
   <div class="top-bar">
     <button class="home-btn" onclick="goHome()">🏠</button>
@@ -461,9 +606,7 @@
     <div class="progress-fill" id="progressFill" style="width: 0%"></div>
   </div>
   
-  <div class="exercise-content" id="exerciseContent">
-    <!-- Contenuto dinamico -->
-  </div>
+  <div class="exercise-content" id="exerciseContent"></div>
   
   <div class="bottom-nav">
     <button class="nav-btn" id="prevBtn" onclick="prevExercise()">‹</button>
@@ -475,291 +618,102 @@
 <script>
 const workoutData = {
   A: [
-    {
-      nome: "Chest Press Convergente",
-      serie: "3 x 8/10",
-      recupero: "3\"",
-      note: "Discesa lenta e controllata, gomiti in linea, spalle basse",
-      carico: "25(10-10-9)",
-      tipo: "macchina",
-      macchina: "Chest Press Convergente Technogym",
-      id: "A_0"
-    },
-    {
-      nome: "Lat Machine con Triangolo",
-      serie: "3 x 7/9",
-      recupero: "2\"",
-      note: "Avambraccio perpendicolare al terreno",
-      carico: "40(9-10-10)",
-      tipo: "macchina",
-      macchina: "Lat Machine Technogym",
-      id: "A_1"
-    },
-    {
-      nome: "Leg Press Orizzontale",
-      serie: "3 x 8/10",
-      recupero: "3\"",
-      note: "Max profondità, 1 sec di fermo in buca",
-      carico: "70(10-10-10)",
-      tipo: "macchina",
-      macchina: "Leg Press Horizontal Technogym",
-      id: "A_2"
-    },
-    {
-      nome: "Lento Avanti con Manubri",
-      serie: "2 x 6/9",
-      recupero: "2\"",
-      note: "Gomiti avanti e perpendicolari al terreno, max allungamento",
-      carico: "6(10) 8(9)",
-      tipo: "pesi",
-      macchina: "Manubri",
-      id: "A_3"
-    },
-    {
-      nome: "Curl con Corda Cavo Basso",
-      serie: "2 x 8/10",
-      recupero: "2\"",
-      note: "Gomiti fissi, 1 sec di contrazione di picco",
-      carico: "12,5(10-10)",
-      tipo: "cavi",
-      macchina: "Cable Station Technogym",
-      id: "A_4"
-    },
-    {
-      nome: "French Press con Manubri",
-      serie: "2 x 8/10",
-      recupero: "2\"",
-      note: "Panca piana, gomiti fermi, manubrio che arriva vicino alle orecchie",
-      carico: "4(10-10)",
-      tipo: "pesi",
-      macchina: "Manubri + Panca",
-      id: "A_5"
-    },
-    {
-      nome: "Plank",
-      serie: "3 x 1'",
-      recupero: "1\"",
-      note: "Mantenere schiena dritta",
-      carico: "Corpo libero",
-      tipo: "corpo_libero",
-      id: "A_6"
-    },
-    {
-      nome: "Posturale",
-      serie: "5/10 minuti",
-      recupero: "-",
-      note: "Tutto ciò che facciamo assieme",
-      carico: "-",
-      tipo: "corpo_libero",
-      id: "A_7"
-    },
-    {
-      nome: "Cardio: Tapis Inclinato",
-      serie: "20 minuti",
-      recupero: "-",
-      note: "Inclinazione minima 7%",
-      carico: "-",
-      tipo: "cardio",
-      id: "A_8"
-    }
+    { nome: "Chest Press Convergente", serie: "3 x 8/10", recupero: "3\"", note: "Discesa lenta e controllata, gomiti in linea, spalle basse", carico: "25(10-10-9)", tipo: "macchina", macchina: "Chest Press Convergente Technogym", id: "A_0" },
+    { nome: "Lat Machine con Triangolo", serie: "3 x 7/9", recupero: "2\"", note: "Avambraccio perpendicolare al terreno", carico: "40(9-10-10)", tipo: "macchina", macchina: "Lat Machine Technogym", id: "A_1" },
+    { nome: "Leg Press Orizzontale", serie: "3 x 8/10", recupero: "3\"", note: "Max profondità, 1 sec di fermo in buca", carico: "70(10-10-10)", tipo: "macchina", macchina: "Leg Press Horizontal Technogym", id: "A_2" },
+    { nome: "Lento Avanti con Manubri", serie: "2 x 6/9", recupero: "2\"", note: "Gomiti avanti e perpendicolari al terreno, max allungamento", carico: "6(10) 8(9)", tipo: "pesi", macchina: "Manubri", id: "A_3" },
+    { nome: "Curl con Corda Cavo Basso", serie: "2 x 8/10", recupero: "2\"", note: "Gomiti fissi, 1 sec di contrazione di picco", carico: "12,5(10-10)", tipo: "cavi", macchina: "Cable Station Technogym", id: "A_4" },
+    { nome: "French Press con Manubri", serie: "2 x 8/10", recupero: "2\"", note: "Panca piana, gomiti fermi, manubrio che arriva vicino alle orecchie", carico: "4(10-10)", tipo: "pesi", macchina: "Manubri + Panca", id: "A_5" },
+    { nome: "Plank", serie: "3 x 1'", recupero: "1\"", note: "Mantenere schiena dritta", carico: "Corpo libero", tipo: "corpo_libero", id: "A_6" },
+    { nome: "Posturale", serie: "5/10 minuti", recupero: "-", note: "Tutto ciò che facciamo assieme", carico: "-", tipo: "corpo_libero", id: "A_7" },
+    { nome: "Cardio: Tapis Inclinato", serie: "20 minuti", recupero: "-", note: "Inclinazione minima 7%", carico: "-", tipo: "cardio", id: "A_8" }
   ],
   B: [
-    {
-      nome: "Step Up",
-      serie: "3 x 8/10",
-      recupero: "2\"",
-      note: "Monopodalico, inizia prima con la gamba debole",
-      carico: "10/12,5",
-      tipo: "pesi",
-      macchina: "Manubri + Step",
-      id: "B_0"
-    },
-    {
-      nome: "Adductor Machine",
-      serie: "2 x 10/12",
-      recupero: "1'30\"",
-      note: "",
-      carico: "20",
-      tipo: "macchina",
-      macchina: "Adductor Technogym",
-      id: "B_1"
-    },
-    {
-      nome: "Chest Press Incline",
-      serie: "2 x 8/10",
-      recupero: "2\"",
-      note: "Scapole depresse, max allungamento",
-      carico: "20",
-      tipo: "macchina",
-      macchina: "Incline Chest Press Technogym",
-      id: "B_2"
-    },
-    {
-      nome: "Pec Fly",
-      serie: "2 x 8/10",
-      recupero: "2\"",
-      note: "Braccia semitese, allungamento max",
-      carico: "10/12,5",
-      tipo: "macchina",
-      macchina: "Pec Fly Technogym",
-      id: "B_3"
-    },
-    {
-      nome: "Pulley",
-      serie: "3 x 8/10",
-      recupero: "2\"",
-      note: "Adduzione scapolare completa",
-      carico: "30",
-      tipo: "macchina",
-      macchina: "Low Row Technogym",
-      id: "B_4"
-    },
-    {
-      nome: "Alzate Laterali Manubri",
-      serie: "3 x 10/12",
-      recupero: "2\"",
-      note: "Panca 75 gradi, braccia tese, segui il piano scapolare",
-      carico: "5",
-      tipo: "pesi",
-      macchina: "Manubri + Panca",
-      id: "B_5"
-    },
-    {
-      nome: "Superset: Faceaway Curl + Push Down",
-      serie: "2 x 10+10",
-      recupero: "2\"",
-      note: "Superset",
-      carico: "12,5 + 10",
-      tipo: "cavi",
-      macchina: "Cable Station Technogym",
-      id: "B_6"
-    },
-    {
-      nome: "Crunch con Disco",
-      serie: "3 x 12/15",
-      recupero: "1\"",
-      note: "Non piegare troppo il collo",
-      carico: "10",
-      tipo: "corpo_libero",
-      id: "B_7"
-    },
-    {
-      nome: "Posturale",
-      serie: "5/10 minuti",
-      recupero: "-",
-      note: "Tutto ciò che facciamo assieme",
-      carico: "-",
-      tipo: "corpo_libero",
-      id: "B_8"
-    },
-    {
-      nome: "Cardio: Bicicletta",
-      serie: "20 minuti",
-      recupero: "-",
-      note: "",
-      carico: "-",
-      tipo: "cardio",
-      id: "B_9"
-    }
+    { nome: "Step Up", serie: "3 x 8/10", recupero: "2\"", note: "Monopodalico, inizia prima con la gamba debole", carico: "10/12,5", tipo: "pesi", macchina: "Manubri + Step", id: "B_0" },
+    { nome: "Adductor Machine", serie: "2 x 10/12", recupero: "1'30\"", note: "", carico: "20", tipo: "macchina", macchina: "Adductor Technogym", id: "B_1" },
+    { nome: "Chest Press Incline", serie: "2 x 8/10", recupero: "2\"", note: "Scapole depresse, max allungamento", carico: "20", tipo: "macchina", macchina: "Incline Chest Press Technogym", id: "B_2" },
+    { nome: "Pec Fly", serie: "2 x 8/10", recupero: "2\"", note: "Braccia semitese, allungamento max", carico: "10/12,5", tipo: "macchina", macchina: "Pec Fly Technogym", id: "B_3" },
+    { nome: "Pulley", serie: "3 x 8/10", recupero: "2\"", note: "Adduzione scapolare completa", carico: "30", tipo: "macchina", macchina: "Low Row Technogym", id: "B_4" },
+    { nome: "Alzate Laterali Manubri", serie: "3 x 10/12", recupero: "2\"", note: "Panca 75 gradi, braccia tese, segui il piano scapolare", carico: "5", tipo: "pesi", macchina: "Manubri + Panca", id: "B_5" },
+    { nome: "Superset: Faceaway Curl + Push Down", serie: "2 x 10+10", recupero: "2\"", note: "Superset", carico: "12,5 + 10", tipo: "cavi", macchina: "Cable Station Technogym", id: "B_6" },
+    { nome: "Crunch con Disco", serie: "3 x 12/15", recupero: "1\"", note: "Non piegare troppo il collo", carico: "10", tipo: "corpo_libero", id: "B_7" },
+    { nome: "Posturale", serie: "5/10 minuti", recupero: "-", note: "Tutto ciò che facciamo assieme", carico: "-", tipo: "corpo_libero", id: "B_8" },
+    { nome: "Cardio: Bicicletta", serie: "20 minuti", recupero: "-", note: "", carico: "-", tipo: "cardio", id: "B_9" }
   ],
   C: [
-    {
-      nome: "Spinte con Manubri su Panca Inclinata",
-      serie: "3 x 6/9",
-      recupero: "3\"",
-      note: "Gomiti e polsi a 45 gradi, max allungamento",
-      carico: "9(9-9-9)",
-      tipo: "pesi",
-      macchina: "Manubri + Panca Inclinata",
-      id: "C_0"
-    },
-    {
-      nome: "Vertical Traction",
-      serie: "2 x 7/9",
-      recupero: "2\"",
-      note: "Avambraccio perpendicolare al terreno",
-      carico: "35(12) 40(9)",
-      tipo: "macchina",
-      macchina: "Lat Machine Technogym",
-      id: "C_1"
-    },
-    {
-      nome: "Low Row",
-      serie: "2 x 7/9",
-      recupero: "2\"",
-      note: "Adduzione scapolare",
-      carico: "35(10) 45(10)",
-      tipo: "macchina",
-      macchina: "Low Row Technogym",
-      id: "C_2"
-    },
-    {
-      nome: "Superset: Leg Extension + Leg Curl",
-      serie: "2 x 8/10 + 8/10",
-      recupero: "2\"",
-      note: "Superset",
-      carico: "27,5(12-12)",
-      tipo: "macchina",
-      macchina: "Leg Extension + Leg Curl Technogym",
-      id: "C_3"
-    },
-    {
-      nome: "Shoulder Press",
-      serie: "2 x 6/9",
-      recupero: "2\"",
-      note: "Gomiti in linea di spinta, bilanciere che arriva sopra la testa",
-      carico: "15(10-7)",
-      tipo: "macchina",
-      macchina: "Shoulder Press Technogym",
-      id: "C_4"
-    },
-    {
-      nome: "Superset: Curl su Panca 45 + Push Down",
-      serie: "3 x 10+10",
-      recupero: "2\"",
-      note: "Superset",
-      carico: "7(10-10) 15(12-12)",
-      tipo: "cavi",
-      macchina: "Cable Station + Panca",
-      id: "C_5"
-    },
-    {
-      nome: "Plank",
-      serie: "3 x 1'",
-      recupero: "1\"",
-      note: "Mantenere schiena dritta",
-      carico: "Corpo libero",
-      tipo: "corpo_libero",
-      id: "C_6"
-    },
-    {
-      nome: "Posturale",
-      serie: "5/10 minuti",
-      recupero: "-",
-      note: "Tutto ciò che facciamo assieme",
-      carico: "-",
-      tipo: "corpo_libero",
-      id: "C_7"
-    },
-    {
-      nome: "Cardio: Tapis Inclinato",
-      serie: "20 minuti",
-      recupero: "-",
-      note: "Inclinazione minima 7%",
-      carico: "-",
-      tipo: "cardio",
-      id: "C_8"
-    }
+    { nome: "Spinte con Manubri su Panca Inclinata", serie: "3 x 6/9", recupero: "3\"", note: "Gomiti e polsi a 45 gradi, max allungamento", carico: "9(9-9-9)", tipo: "pesi", macchina: "Manubri + Panca Inclinata", id: "C_0" },
+    { nome: "Vertical Traction", serie: "2 x 7/9", recupero: "2\"", note: "Avambraccio perpendicolare al terreno", carico: "35(12) 40(9)", tipo: "macchina", macchina: "Lat Machine Technogym", id: "C_1" },
+    { nome: "Low Row", serie: "2 x 7/9", recupero: "2\"", note: "Adduzione scapolare", carico: "35(10) 45(10)", tipo: "macchina", macchina: "Low Row Technogym", id: "C_2" },
+    { nome: "Superset: Leg Extension + Leg Curl", serie: "2 x 8/10 + 8/10", recupero: "2\"", note: "Superset", carico: "27,5(12-12)", tipo: "macchina", macchina: "Leg Extension + Leg Curl Technogym", id: "C_3" },
+    { nome: "Shoulder Press", serie: "2 x 6/9", recupero: "2\"", note: "Gomiti in linea di spinta, bilanciere che arriva sopra la testa", carico: "15(10-7)", tipo: "macchina", macchina: "Shoulder Press Technogym", id: "C_4" },
+    { nome: "Superset: Curl su Panca 45 + Push Down", serie: "3 x 10+10", recupero: "2\"", note: "Superset", carico: "7(10-10) 15(12-12)", tipo: "cavi", macchina: "Cable Station + Panca", id: "C_5" },
+    { nome: "Plank", serie: "3 x 1'", recupero: "1\"", note: "Mantenere schiena dritta", carico: "Corpo libero", tipo: "corpo_libero", id: "C_6" },
+    { nome: "Posturale", serie: "5/10 minuti", recupero: "-", note: "Tutto ciò che facciamo assieme", carico: "-", tipo: "corpo_libero", id: "C_7" },
+    { nome: "Cardio: Tapis Inclinato", serie: "20 minuti", recupero: "-", note: "Inclinazione minima 7%", carico: "-", tipo: "cardio", id: "C_8" }
   ]
 };
 
+let currentUser = null;
 let currentDay = null;
 let currentExercise = 0;
 let currentPhotoExerciseId = null;
 
-// Photo management
+// User management
+function getCurrentUser() {
+  return localStorage.getItem('current_user');
+}
+
+function setCurrentUser(username) {
+  localStorage.setItem('current_user', username);
+  currentUser = username;
+}
+
+function getUserData(username, key) {
+  return localStorage.getItem(`user_${username}_${key}`);
+}
+
+function setUserData(username, key, value) {
+  localStorage.setItem(`user_${username}_${key}`, value);
+}
+
+function saveUserProfile() {
+  const userName = document.getElementById('userName').value.trim();
+  const trainerName = document.getElementById('trainerName').value.trim();
+  
+  if (!userName || !trainerName) {
+    alert('Compila entrambi i campi!');
+    return;
+  }
+  
+  setCurrentUser(userName);
+  setUserData(userName, 'trainer', trainerName);
+  
+  showHomeScreen();
+}
+
+function changeUser() {
+  if (confirm('Vuoi cambiare utente? Potrai tornare al tuo profilo in qualsiasi momento.')) {
+    document.getElementById('userName').value = '';
+    document.getElementById('trainerName').value = '';
+    document.getElementById('homeScreen').classList.remove('active');
+    document.getElementById('setupScreen').classList.add('active');
+  }
+}
+
+function showHomeScreen() {
+  const user = getCurrentUser();
+  const trainer = getUserData(user, 'trainer');
+  
+  document.getElementById('displayUserName').textContent = user;
+  document.getElementById('displayTrainerName').textContent = `PT: ${trainer}`;
+  
+  document.getElementById('setupScreen').classList.remove('active');
+  document.getElementById('homeScreen').classList.add('active');
+}
+
+// Photo management (per user)
 function getPhotoKey(exerciseId) {
-  return `photo_${exerciseId}`;
+  return `photo_${currentUser}_${exerciseId}`;
 }
 
 function savePhoto(exerciseId, photoData) {
@@ -785,7 +739,6 @@ document.getElementById('photoInput').addEventListener('change', function(e) {
     };
     reader.readAsDataURL(file);
   }
-  // Reset input
   e.target.value = '';
 });
 
@@ -856,25 +809,20 @@ function updateExerciseScreen() {
   const total = exercises.length;
   const progress = ((currentExercise + 1) / total) * 100;
   
-  // Update top bar
   document.getElementById('topDay').textContent = `Giorno ${currentDay}`;
   document.getElementById('topProgress').textContent = `Esercizio ${currentExercise + 1} di ${total}`;
   document.getElementById('progressFill').style.width = `${progress}%`;
   
-  // Update navigation buttons
   document.getElementById('prevBtn').disabled = (currentExercise === 0);
   document.getElementById('nextBtn').disabled = (currentExercise === total - 1);
   
-  // Update dots
   const dotsHtml = exercises.map((_, idx) => 
     `<button class="nav-dot ${idx === currentExercise ? 'active' : ''}" onclick="jumpToExercise(${idx})"></button>`
   ).join('');
   document.getElementById('navDots').innerHTML = dotsHtml;
   
-  // Parse carico
   const { peso, serie } = parseCarico(exercise.carico);
   
-  // Build exercise content
   let html = `
     <div class="exercise-header">
       <span class="type-badge type-${exercise.tipo}">${getTypeLabel(exercise.tipo)}</span>
@@ -884,7 +832,6 @@ function updateExerciseScreen() {
     </div>
   `;
   
-  // Add image with photo capability for machines and pesi
   if (exercise.tipo !== 'corpo_libero' && exercise.tipo !== 'cardio') {
     const savedPhoto = getPhoto(exercise.id);
     const imageUrl = savedPhoto || `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Crect fill='%23e5e7eb' width='200' height='200'/%3E%3Ctext x='50%25' y='45%25' text-anchor='middle' dy='.3em' fill='%239ca3af' font-family='sans-serif' font-size='14'%3ETechnogym%3C/text%3E%3Ctext x='50%25' y='60%25' text-anchor='middle' dy='.3em' fill='%23b0b0b0' font-family='sans-serif' font-size='9'%3E${encodeURIComponent(exercise.nome)}%3C/text%3E%3C/svg%3E`;
@@ -897,7 +844,6 @@ function updateExerciseScreen() {
     `;
   }
   
-  // Info box
   html += `
     <div class="info-box">
       <div class="info-row">
@@ -912,7 +858,6 @@ function updateExerciseScreen() {
       </div>
   `;
   
-  // Carico section
   if (peso && peso !== '-') {
     html += `
       <div class="carico-section">
@@ -942,7 +887,6 @@ function updateExerciseScreen() {
   
   html += `</div>`;
   
-  // Notes
   if (exercise.note && exercise.note !== '-') {
     html += `
       <div class="notes-box">
@@ -975,14 +919,23 @@ function handleSwipe() {
   
   if (Math.abs(diff) > swipeThreshold) {
     if (diff > 0) {
-      // Swipe left - next
       nextExercise();
     } else {
-      // Swipe right - previous
       prevExercise();
     }
   }
 }
+
+// Initialize app
+window.addEventListener('DOMContentLoaded', () => {
+  const user = getCurrentUser();
+  if (user) {
+    currentUser = user;
+    showHomeScreen();
+  } else {
+    document.getElementById('setupScreen').classList.add('active');
+  }
+});
 </script>
 
 </body>
