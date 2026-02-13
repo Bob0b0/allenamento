@@ -82,21 +82,27 @@
       font-size: 0.9rem;
     }
     
-    .form-group input {
+    .form-group input, .form-group select, .form-group textarea {
       width: 100%;
       padding: 1rem;
       border: 2px solid #e0e0e0;
       border-radius: 1rem;
       font-size: 1rem;
       transition: all 0.3s;
+      font-family: inherit;
     }
     
-    .form-group input:focus {
+    .form-group textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+    
+    .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
       outline: none;
       border-color: #667eea;
     }
     
-    .setup-btn {
+    .setup-btn, .primary-btn {
       width: 100%;
       padding: 1.2rem;
       background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -109,13 +115,31 @@
       transition: transform 0.2s;
     }
     
-    .setup-btn:active {
+    .setup-btn:active, .primary-btn:active {
       transform: scale(0.98);
     }
     
-    .setup-btn:disabled {
+    .setup-btn:disabled, .primary-btn:disabled {
       opacity: 0.5;
       cursor: not-allowed;
+    }
+    
+    .secondary-btn {
+      width: 100%;
+      padding: 1rem;
+      background: rgba(255, 255, 255, 0.2);
+      color: white;
+      border: 2px solid white;
+      border-radius: 1rem;
+      font-size: 1rem;
+      font-weight: bold;
+      cursor: pointer;
+      margin-top: 0.5rem;
+    }
+    
+    .danger-btn {
+      background: rgba(239, 68, 68, 0.9);
+      color: white;
     }
     
     /* Home Screen */
@@ -138,17 +162,6 @@
       margin-bottom: 0.5rem;
     }
     
-    .home-subtitle {
-      font-size: 1.2rem;
-      opacity: 0.9;
-    }
-    
-    .home-info {
-      font-size: 0.9rem;
-      opacity: 0.8;
-      margin-top: 0.5rem;
-    }
-    
     .user-badge {
       background: rgba(255, 255, 255, 0.2);
       backdrop-filter: blur(10px);
@@ -168,11 +181,13 @@
       font-size: 1.1rem;
       font-weight: bold;
       margin-bottom: 0.2rem;
+      color: white;
     }
     
     .user-trainer {
       font-size: 0.85rem;
       opacity: 0.8;
+      color: white;
     }
     
     .change-user-btn {
@@ -204,11 +219,25 @@
       cursor: pointer;
       transition: all 0.2s;
       text-align: center;
+      position: relative;
     }
     
     .day-btn:active {
       transform: scale(0.95);
       background: rgba(255, 255, 255, 0.2);
+    }
+    
+    .day-edit-btn {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+      background: rgba(59, 130, 246, 0.8);
+      border: none;
+      border-radius: 0.5rem;
+      padding: 0.4rem 0.8rem;
+      color: white;
+      font-size: 0.75rem;
+      cursor: pointer;
     }
     
     .day-name {
@@ -358,7 +387,23 @@
       background: rgba(0, 0, 0, 0.3);
       border-radius: 1rem;
       padding: 1.5rem;
+      padding-top: 3rem;
       margin-bottom: 1rem;
+      position: relative;
+    }
+    
+    .edit-exercise-btn {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: rgba(59, 130, 246, 0.8);
+      border: none;
+      border-radius: 0.5rem;
+      color: white;
+      padding: 0.5rem 1rem;
+      font-size: 0.85rem;
+      cursor: pointer;
+      font-weight: bold;
     }
     
     .info-row {
@@ -499,6 +544,7 @@
       flex: 1;
       justify-content: center;
       padding: 0 1rem;
+      overflow-x: auto;
     }
     
     .nav-dot {
@@ -510,6 +556,7 @@
       padding: 0;
       cursor: pointer;
       transition: all 0.2s;
+      flex-shrink: 0;
     }
     
     .nav-dot.active {
@@ -528,6 +575,127 @@
     
     #photoInput {
       display: none;
+    }
+    
+    /* Modal */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.9);
+      z-index: 1000;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+    
+    .modal-overlay.active {
+      display: flex;
+    }
+    
+    .modal-content {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      border-radius: 1.5rem;
+      padding: 2rem;
+      max-width: 500px;
+      width: 100%;
+      max-height: 85vh;
+      overflow-y: auto;
+      color: white;
+    }
+    
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1.5rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    
+    .modal-title {
+      font-size: 1.5rem;
+      font-weight: bold;
+    }
+    
+    .modal-close {
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      color: white;
+      font-size: 1.5rem;
+      width: 2.5rem;
+      height: 2.5rem;
+      border-radius: 50%;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .exercise-list {
+      margin-top: 1rem;
+    }
+    
+    .exercise-item {
+      background: rgba(255, 255, 255, 0.05);
+      border-radius: 1rem;
+      padding: 1rem;
+      margin-bottom: 0.5rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    
+    .exercise-item-info {
+      flex: 1;
+    }
+    
+    .exercise-item-name {
+      font-weight: bold;
+      margin-bottom: 0.3rem;
+    }
+    
+    .exercise-item-details {
+      font-size: 0.85rem;
+      opacity: 0.7;
+    }
+    
+    .exercise-item-actions {
+      display: flex;
+      gap: 0.5rem;
+    }
+    
+    .icon-btn {
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      color: white;
+      width: 2.5rem;
+      height: 2.5rem;
+      border-radius: 0.5rem;
+      cursor: pointer;
+      font-size: 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .icon-btn.delete {
+      background: rgba(239, 68, 68, 0.3);
+    }
+    
+    .add-exercise-btn {
+      width: 100%;
+      padding: 1rem;
+      background: rgba(59, 130, 246, 0.3);
+      border: 2px dashed rgba(59, 130, 246, 0.5);
+      color: white;
+      border-radius: 1rem;
+      font-size: 1rem;
+      cursor: pointer;
+      margin-top: 1rem;
     }
   </style>
 </head>
@@ -572,22 +740,25 @@
   
   <div class="day-buttons">
     <button class="day-btn" onclick="selectDay('A')">
+      <button class="day-edit-btn" onclick="event.stopPropagation(); editDay('A')">✏️ Modifica</button>
       <div class="day-name">Giorno A</div>
-      <div class="day-count">9 esercizi</div>
+      <div class="day-count" id="countA">0 esercizi</div>
     </button>
     <button class="day-btn" onclick="selectDay('B')">
+      <button class="day-edit-btn" onclick="event.stopPropagation(); editDay('B')">✏️ Modifica</button>
       <div class="day-name">Giorno B</div>
-      <div class="day-count">10 esercizi</div>
+      <div class="day-count" id="countB">0 esercizi</div>
     </button>
     <button class="day-btn" onclick="selectDay('C')">
+      <button class="day-edit-btn" onclick="event.stopPropagation(); editDay('C')">✏️ Modifica</button>
       <div class="day-name">Giorno C</div>
-      <div class="day-count">9 esercizi</div>
+      <div class="day-count" id="countC">0 esercizi</div>
     </button>
   </div>
   
   <div class="footer-tip">
     📸 Tocca le immagini per aggiungere foto<br>
-    Swipe → per navigare tra gli esercizi
+    ✏️ Modifica per personalizzare gli esercizi
   </div>
 </div>
 
@@ -615,41 +786,102 @@
   </div>
 </div>
 
+<!-- Edit Day Modal -->
+<div class="modal-overlay" id="editDayModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-title" id="editDayTitle">Modifica Giorno A</div>
+      <button class="modal-close" onclick="closeEditDayModal()">×</button>
+    </div>
+    <div class="exercise-list" id="exerciseList"></div>
+    <button class="add-exercise-btn" onclick="addNewExercise()">+ Aggiungi Esercizio</button>
+  </div>
+</div>
+
+<!-- Edit Exercise Modal -->
+<div class="modal-overlay" id="editExerciseModal">
+  <div class="modal-content">
+    <div class="modal-header">
+      <div class="modal-title">Modifica Esercizio</div>
+      <button class="modal-close" onclick="closeEditExerciseModal()">×</button>
+    </div>
+    <form id="editExerciseForm" onsubmit="return false;">
+      <div class="form-group">
+        <label>Nome esercizio</label>
+        <input type="text" id="editExName" required>
+      </div>
+      <div class="form-group">
+        <label>Tipo</label>
+        <select id="editExTipo">
+          <option value="macchina">Macchina</option>
+          <option value="pesi">Pesi Liberi</option>
+          <option value="cavi">Cavi</option>
+          <option value="corpo_libero">Corpo Libero</option>
+          <option value="cardio">Cardio</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Nome macchina/attrezzatura (opzionale)</label>
+        <input type="text" id="editExMacchina">
+      </div>
+      <div class="form-group">
+        <label>Serie x Ripetizioni (es. 3 x 8/10)</label>
+        <input type="text" id="editExSerie" required>
+      </div>
+      <div class="form-group">
+        <label>Carico (es. 25(10-10-9) oppure 10/12,5)</label>
+        <input type="text" id="editExCarico" required>
+      </div>
+      <div class="form-group">
+        <label>Recupero (es. 2" oppure 1'30")</label>
+        <input type="text" id="editExRecupero" required>
+      </div>
+      <div class="form-group">
+        <label>Note tecniche</label>
+        <textarea id="editExNote" rows="3"></textarea>
+      </div>
+      <button class="primary-btn" onclick="saveEditedExercise()">Salva Modifiche</button>
+      <button class="secondary-btn danger-btn" onclick="deleteExercise()" style="margin-top: 1rem;">Elimina Esercizio</button>
+    </form>
+  </div>
+</div>
+
 <script>
-const workoutData = {
+// Default workout data (template)
+const defaultWorkoutData = {
   A: [
-    { nome: "Chest Press Convergente", serie: "3 x 8/10", recupero: "3\"", note: "Discesa lenta e controllata, gomiti in linea, spalle basse", carico: "25(10-10-9)", tipo: "macchina", macchina: "Chest Press Convergente Technogym", id: "A_0" },
-    { nome: "Lat Machine con Triangolo", serie: "3 x 7/9", recupero: "2\"", note: "Avambraccio perpendicolare al terreno", carico: "40(9-10-10)", tipo: "macchina", macchina: "Lat Machine Technogym", id: "A_1" },
-    { nome: "Leg Press Orizzontale", serie: "3 x 8/10", recupero: "3\"", note: "Max profondità, 1 sec di fermo in buca", carico: "70(10-10-10)", tipo: "macchina", macchina: "Leg Press Horizontal Technogym", id: "A_2" },
-    { nome: "Lento Avanti con Manubri", serie: "2 x 6/9", recupero: "2\"", note: "Gomiti avanti e perpendicolari al terreno, max allungamento", carico: "6(10) 8(9)", tipo: "pesi", macchina: "Manubri", id: "A_3" },
-    { nome: "Curl con Corda Cavo Basso", serie: "2 x 8/10", recupero: "2\"", note: "Gomiti fissi, 1 sec di contrazione di picco", carico: "12,5(10-10)", tipo: "cavi", macchina: "Cable Station Technogym", id: "A_4" },
-    { nome: "French Press con Manubri", serie: "2 x 8/10", recupero: "2\"", note: "Panca piana, gomiti fermi, manubrio che arriva vicino alle orecchie", carico: "4(10-10)", tipo: "pesi", macchina: "Manubri + Panca", id: "A_5" },
-    { nome: "Plank", serie: "3 x 1'", recupero: "1\"", note: "Mantenere schiena dritta", carico: "Corpo libero", tipo: "corpo_libero", id: "A_6" },
-    { nome: "Posturale", serie: "5/10 minuti", recupero: "-", note: "Tutto ciò che facciamo assieme", carico: "-", tipo: "corpo_libero", id: "A_7" },
-    { nome: "Cardio: Tapis Inclinato", serie: "20 minuti", recupero: "-", note: "Inclinazione minima 7%", carico: "-", tipo: "cardio", id: "A_8" }
+    { nome: "Chest Press Convergente", serie: "3 x 8/10", recupero: "3\"", note: "Discesa lenta e controllata, gomiti in linea, spalle basse", carico: "25(10-10-9)", tipo: "macchina", macchina: "Chest Press Convergente Technogym" },
+    { nome: "Lat Machine con Triangolo", serie: "3 x 7/9", recupero: "2\"", note: "Avambraccio perpendicolare al terreno", carico: "40(9-10-10)", tipo: "macchina", macchina: "Lat Machine Technogym" },
+    { nome: "Leg Press Orizzontale", serie: "3 x 8/10", recupero: "3\"", note: "Max profondità, 1 sec di fermo in buca", carico: "70(10-10-10)", tipo: "macchina", macchina: "Leg Press Horizontal Technogym" },
+    { nome: "Lento Avanti con Manubri", serie: "2 x 6/9", recupero: "2\"", note: "Gomiti avanti e perpendicolari al terreno, max allungamento", carico: "6(10) 8(9)", tipo: "pesi", macchina: "Manubri" },
+    { nome: "Curl con Corda Cavo Basso", serie: "2 x 8/10", recupero: "2\"", note: "Gomiti fissi, 1 sec di contrazione di picco", carico: "12,5(10-10)", tipo: "cavi", macchina: "Cable Station Technogym" },
+    { nome: "French Press con Manubri", serie: "2 x 8/10", recupero: "2\"", note: "Panca piana, gomiti fermi, manubrio che arriva vicino alle orecchie", carico: "4(10-10)", tipo: "pesi", macchina: "Manubri + Panca" },
+    { nome: "Plank", serie: "3 x 1'", recupero: "1\"", note: "Mantenere schiena dritta", carico: "Corpo libero", tipo: "corpo_libero" },
+    { nome: "Posturale", serie: "5/10 minuti", recupero: "-", note: "Tutto ciò che facciamo assieme", carico: "-", tipo: "corpo_libero" },
+    { nome: "Cardio: Tapis Inclinato", serie: "20 minuti", recupero: "-", note: "Inclinazione minima 7%", carico: "-", tipo: "cardio" }
   ],
   B: [
-    { nome: "Step Up", serie: "3 x 8/10", recupero: "2\"", note: "Monopodalico, inizia prima con la gamba debole", carico: "10/12,5", tipo: "pesi", macchina: "Manubri + Step", id: "B_0" },
-    { nome: "Adductor Machine", serie: "2 x 10/12", recupero: "1'30\"", note: "", carico: "20", tipo: "macchina", macchina: "Adductor Technogym", id: "B_1" },
-    { nome: "Chest Press Incline", serie: "2 x 8/10", recupero: "2\"", note: "Scapole depresse, max allungamento", carico: "20", tipo: "macchina", macchina: "Incline Chest Press Technogym", id: "B_2" },
-    { nome: "Pec Fly", serie: "2 x 8/10", recupero: "2\"", note: "Braccia semitese, allungamento max", carico: "10/12,5", tipo: "macchina", macchina: "Pec Fly Technogym", id: "B_3" },
-    { nome: "Pulley", serie: "3 x 8/10", recupero: "2\"", note: "Adduzione scapolare completa", carico: "30", tipo: "macchina", macchina: "Low Row Technogym", id: "B_4" },
-    { nome: "Alzate Laterali Manubri", serie: "3 x 10/12", recupero: "2\"", note: "Panca 75 gradi, braccia tese, segui il piano scapolare", carico: "5", tipo: "pesi", macchina: "Manubri + Panca", id: "B_5" },
-    { nome: "Superset: Faceaway Curl + Push Down", serie: "2 x 10+10", recupero: "2\"", note: "Superset", carico: "12,5 + 10", tipo: "cavi", macchina: "Cable Station Technogym", id: "B_6" },
-    { nome: "Crunch con Disco", serie: "3 x 12/15", recupero: "1\"", note: "Non piegare troppo il collo", carico: "10", tipo: "corpo_libero", id: "B_7" },
-    { nome: "Posturale", serie: "5/10 minuti", recupero: "-", note: "Tutto ciò che facciamo assieme", carico: "-", tipo: "corpo_libero", id: "B_8" },
-    { nome: "Cardio: Bicicletta", serie: "20 minuti", recupero: "-", note: "", carico: "-", tipo: "cardio", id: "B_9" }
+    { nome: "Step Up", serie: "3 x 8/10", recupero: "2\"", note: "Monopodalico, inizia prima con la gamba debole", carico: "10/12,5", tipo: "pesi", macchina: "Manubri + Step" },
+    { nome: "Adductor Machine", serie: "2 x 10/12", recupero: "1'30\"", note: "", carico: "20", tipo: "macchina", macchina: "Adductor Technogym" },
+    { nome: "Chest Press Incline", serie: "2 x 8/10", recupero: "2\"", note: "Scapole depresse, max allungamento", carico: "20", tipo: "macchina", macchina: "Incline Chest Press Technogym" },
+    { nome: "Pec Fly", serie: "2 x 8/10", recupero: "2\"", note: "Braccia semitese, allungamento max", carico: "10/12,5", tipo: "macchina", macchina: "Pec Fly Technogym" },
+    { nome: "Pulley", serie: "3 x 8/10", recupero: "2\"", note: "Adduzione scapolare completa", carico: "30", tipo: "macchina", macchina: "Low Row Technogym" },
+    { nome: "Alzate Laterali Manubri", serie: "3 x 10/12", recupero: "2\"", note: "Panca 75 gradi, braccia tese, segui il piano scapolare", carico: "5", tipo: "pesi", macchina: "Manubri + Panca" },
+    { nome: "Superset: Faceaway Curl + Push Down", serie: "2 x 10+10", recupero: "2\"", note: "Superset", carico: "12,5 + 10", tipo: "cavi", macchina: "Cable Station Technogym" },
+    { nome: "Crunch con Disco", serie: "3 x 12/15", recupero: "1\"", note: "Non piegare troppo il collo", carico: "10", tipo: "corpo_libero" },
+    { nome: "Posturale", serie: "5/10 minuti", recupero: "-", note: "Tutto ciò che facciamo assieme", carico: "-", tipo: "corpo_libero" },
+    { nome: "Cardio: Bicicletta", serie: "20 minuti", recupero: "-", note: "", carico: "-", tipo: "cardio" }
   ],
   C: [
-    { nome: "Spinte con Manubri su Panca Inclinata", serie: "3 x 6/9", recupero: "3\"", note: "Gomiti e polsi a 45 gradi, max allungamento", carico: "9(9-9-9)", tipo: "pesi", macchina: "Manubri + Panca Inclinata", id: "C_0" },
-    { nome: "Vertical Traction", serie: "2 x 7/9", recupero: "2\"", note: "Avambraccio perpendicolare al terreno", carico: "35(12) 40(9)", tipo: "macchina", macchina: "Lat Machine Technogym", id: "C_1" },
-    { nome: "Low Row", serie: "2 x 7/9", recupero: "2\"", note: "Adduzione scapolare", carico: "35(10) 45(10)", tipo: "macchina", macchina: "Low Row Technogym", id: "C_2" },
-    { nome: "Superset: Leg Extension + Leg Curl", serie: "2 x 8/10 + 8/10", recupero: "2\"", note: "Superset", carico: "27,5(12-12)", tipo: "macchina", macchina: "Leg Extension + Leg Curl Technogym", id: "C_3" },
-    { nome: "Shoulder Press", serie: "2 x 6/9", recupero: "2\"", note: "Gomiti in linea di spinta, bilanciere che arriva sopra la testa", carico: "15(10-7)", tipo: "macchina", macchina: "Shoulder Press Technogym", id: "C_4" },
-    { nome: "Superset: Curl su Panca 45 + Push Down", serie: "3 x 10+10", recupero: "2\"", note: "Superset", carico: "7(10-10) 15(12-12)", tipo: "cavi", macchina: "Cable Station + Panca", id: "C_5" },
-    { nome: "Plank", serie: "3 x 1'", recupero: "1\"", note: "Mantenere schiena dritta", carico: "Corpo libero", tipo: "corpo_libero", id: "C_6" },
-    { nome: "Posturale", serie: "5/10 minuti", recupero: "-", note: "Tutto ciò che facciamo assieme", carico: "-", tipo: "corpo_libero", id: "C_7" },
-    { nome: "Cardio: Tapis Inclinato", serie: "20 minuti", recupero: "-", note: "Inclinazione minima 7%", carico: "-", tipo: "cardio", id: "C_8" }
+    { nome: "Spinte con Manubri su Panca Inclinata", serie: "3 x 6/9", recupero: "3\"", note: "Gomiti e polsi a 45 gradi, max allungamento", carico: "9(9-9-9)", tipo: "pesi", macchina: "Manubri + Panca Inclinata" },
+    { nome: "Vertical Traction", serie: "2 x 7/9", recupero: "2\"", note: "Avambraccio perpendicolare al terreno", carico: "35(12) 40(9)", tipo: "macchina", macchina: "Lat Machine Technogym" },
+    { nome: "Low Row", serie: "2 x 7/9", recupero: "2\"", note: "Adduzione scapolare", carico: "35(10) 45(10)", tipo: "macchina", macchina: "Low Row Technogym" },
+    { nome: "Superset: Leg Extension + Leg Curl", serie: "2 x 8/10 + 8/10", recupero: "2\"", note: "Superset", carico: "27,5(12-12)", tipo: "macchina", macchina: "Leg Extension + Leg Curl Technogym" },
+    { nome: "Shoulder Press", serie: "2 x 6/9", recupero: "2\"", note: "Gomiti in linea di spinta, bilanciere che arriva sopra la testa", carico: "15(10-7)", tipo: "macchina", macchina: "Shoulder Press Technogym" },
+    { nome: "Superset: Curl su Panca 45 + Push Down", serie: "3 x 10+10", recupero: "2\"", note: "Superset", carico: "7(10-10) 15(12-12)", tipo: "cavi", macchina: "Cable Station + Panca" },
+    { nome: "Plank", serie: "3 x 1'", recupero: "1\"", note: "Mantenere schiena dritta", carico: "Corpo libero", tipo: "corpo_libero" },
+    { nome: "Posturale", serie: "5/10 minuti", recupero: "-", note: "Tutto ciò che facciamo assieme", carico: "-", tipo: "corpo_libero" },
+    { nome: "Cardio: Tapis Inclinato", serie: "20 minuti", recupero: "-", note: "Inclinazione minima 7%", carico: "-", tipo: "cardio" }
   ]
 };
 
@@ -657,6 +889,8 @@ let currentUser = null;
 let currentDay = null;
 let currentExercise = 0;
 let currentPhotoExerciseId = null;
+let editingDay = null;
+let editingExerciseIndex = null;
 
 // User management
 function getCurrentUser() {
@@ -669,11 +903,21 @@ function setCurrentUser(username) {
 }
 
 function getUserData(username, key) {
-  return localStorage.getItem(`user_${username}_${key}`);
+  const data = localStorage.getItem(`user_${username}_${key}`);
+  return data ? JSON.parse(data) : null;
 }
 
 function setUserData(username, key, value) {
-  localStorage.setItem(`user_${username}_${key}`, value);
+  localStorage.setItem(`user_${username}_${key}`, JSON.stringify(value));
+}
+
+function getWorkoutData(username) {
+  const data = getUserData(username, 'workout');
+  return data || JSON.parse(JSON.stringify(defaultWorkoutData)); // Deep copy of default
+}
+
+function saveWorkoutData(username, data) {
+  setUserData(username, 'workout', data);
 }
 
 function saveUserProfile() {
@@ -687,6 +931,11 @@ function saveUserProfile() {
   
   setCurrentUser(userName);
   setUserData(userName, 'trainer', trainerName);
+  
+  // Initialize workout data if not exists
+  if (!getUserData(userName, 'workout')) {
+    saveWorkoutData(userName, defaultWorkoutData);
+  }
   
   showHomeScreen();
 }
@@ -707,31 +956,37 @@ function showHomeScreen() {
   document.getElementById('displayUserName').textContent = user;
   document.getElementById('displayTrainerName').textContent = `PT: ${trainer}`;
   
+  // Update exercise counts
+  const workout = getWorkoutData(user);
+  document.getElementById('countA').textContent = `${workout.A.length} esercizi`;
+  document.getElementById('countB').textContent = `${workout.B.length} esercizi`;
+  document.getElementById('countC').textContent = `${workout.C.length} esercizi`;
+  
   document.getElementById('setupScreen').classList.remove('active');
   document.getElementById('homeScreen').classList.add('active');
 }
 
-// Photo management (per user)
-function getPhotoKey(exerciseId) {
-  return `photo_${currentUser}_${exerciseId}`;
+// Photo management (per user per exercise)
+function getPhotoKey(exerciseIndex) {
+  return `photo_${currentUser}_${currentDay}_${exerciseIndex}`;
 }
 
-function savePhoto(exerciseId, photoData) {
-  localStorage.setItem(getPhotoKey(exerciseId), photoData);
+function savePhoto(exerciseIndex, photoData) {
+  localStorage.setItem(getPhotoKey(exerciseIndex), photoData);
 }
 
-function getPhoto(exerciseId) {
-  return localStorage.getItem(getPhotoKey(exerciseId));
+function getPhoto(exerciseIndex) {
+  return localStorage.getItem(getPhotoKey(exerciseIndex));
 }
 
-function handlePhotoClick(exerciseId) {
-  currentPhotoExerciseId = exerciseId;
+function handlePhotoClick(exerciseIndex) {
+  currentPhotoExerciseId = exerciseIndex;
   document.getElementById('photoInput').click();
 }
 
 document.getElementById('photoInput').addEventListener('change', function(e) {
   const file = e.target.files[0];
-  if (file && currentPhotoExerciseId) {
+  if (file && currentPhotoExerciseId !== null) {
     const reader = new FileReader();
     reader.onload = function(event) {
       savePhoto(currentPhotoExerciseId, event.target.result);
@@ -742,6 +997,130 @@ document.getElementById('photoInput').addEventListener('change', function(e) {
   e.target.value = '';
 });
 
+// Edit Day functionality
+function editDay(day) {
+  editingDay = day;
+  const workout = getWorkoutData(currentUser);
+  const exercises = workout[day];
+  
+  document.getElementById('editDayTitle').textContent = `Modifica Giorno ${day}`;
+  
+  const listHtml = exercises.map((ex, idx) => `
+    <div class="exercise-item">
+      <div class="exercise-item-info">
+        <div class="exercise-item-name">${ex.nome}</div>
+        <div class="exercise-item-details">${ex.serie} • ${ex.carico} kg</div>
+      </div>
+      <div class="exercise-item-actions">
+        <button class="icon-btn" onclick="editExercise(${idx})">✏️</button>
+        <button class="icon-btn delete" onclick="confirmDeleteExercise(${idx})">🗑️</button>
+      </div>
+    </div>
+  `).join('');
+  
+  document.getElementById('exerciseList').innerHTML = listHtml;
+  document.getElementById('editDayModal').classList.add('active');
+}
+
+function closeEditDayModal() {
+  document.getElementById('editDayModal').classList.remove('active');
+  editingDay = null;
+  showHomeScreen(); // Refresh counts
+}
+
+function addNewExercise() {
+  editingExerciseIndex = -1; // -1 means new exercise
+  
+  // Clear form
+  document.getElementById('editExName').value = '';
+  document.getElementById('editExTipo').value = 'macchina';
+  document.getElementById('editExMacchina').value = '';
+  document.getElementById('editExSerie').value = '';
+  document.getElementById('editExCarico').value = '';
+  document.getElementById('editExRecupero').value = '';
+  document.getElementById('editExNote').value = '';
+  
+  document.getElementById('editDayModal').classList.remove('active');
+  document.getElementById('editExerciseModal').classList.add('active');
+}
+
+function editExercise(index) {
+  editingExerciseIndex = index;
+  const workout = getWorkoutData(currentUser);
+  const ex = workout[editingDay][index];
+  
+  // Fill form
+  document.getElementById('editExName').value = ex.nome;
+  document.getElementById('editExTipo').value = ex.tipo;
+  document.getElementById('editExMacchina').value = ex.macchina || '';
+  document.getElementById('editExSerie').value = ex.serie;
+  document.getElementById('editExCarico').value = ex.carico;
+  document.getElementById('editExRecupero').value = ex.recupero;
+  document.getElementById('editExNote').value = ex.note || '';
+  
+  document.getElementById('editDayModal').classList.remove('active');
+  document.getElementById('editExerciseModal').classList.add('active');
+}
+
+function saveEditedExercise() {
+  const newEx = {
+    nome: document.getElementById('editExName').value.trim(),
+    tipo: document.getElementById('editExTipo').value,
+    macchina: document.getElementById('editExMacchina').value.trim(),
+    serie: document.getElementById('editExSerie').value.trim(),
+    carico: document.getElementById('editExCarico').value.trim(),
+    recupero: document.getElementById('editExRecupero').value.trim(),
+    note: document.getElementById('editExNote').value.trim()
+  };
+  
+  if (!newEx.nome || !newEx.serie || !newEx.carico || !newEx.recupero) {
+    alert('Compila tutti i campi obbligatori!');
+    return;
+  }
+  
+  const workout = getWorkoutData(currentUser);
+  
+  if (editingExerciseIndex === -1) {
+    // New exercise
+    workout[editingDay].push(newEx);
+  } else {
+    // Update existing
+    workout[editingDay][editingExerciseIndex] = newEx;
+  }
+  
+  saveWorkoutData(currentUser, workout);
+  closeEditExerciseModal();
+  editDay(editingDay); // Refresh list
+}
+
+function deleteExercise() {
+  if (editingExerciseIndex === -1) return;
+  
+  if (confirm('Sei sicuro di voler eliminare questo esercizio?')) {
+    const workout = getWorkoutData(currentUser);
+    workout[editingDay].splice(editingExerciseIndex, 1);
+    saveWorkoutData(currentUser, workout);
+    closeEditExerciseModal();
+    editDay(editingDay); // Refresh list
+  }
+}
+
+function confirmDeleteExercise(index) {
+  editingExerciseIndex = index;
+  if (confirm('Sei sicuro di voler eliminare questo esercizio?')) {
+    const workout = getWorkoutData(currentUser);
+    workout[editingDay].splice(index, 1);
+    saveWorkoutData(currentUser, workout);
+    editDay(editingDay); // Refresh list
+  }
+}
+
+function closeEditExerciseModal() {
+  document.getElementById('editExerciseModal').classList.remove('active');
+  document.getElementById('editDayModal').classList.add('active');
+}
+
+// Exercise navigation
 function selectDay(day) {
   currentDay = day;
   currentExercise = 0;
@@ -758,6 +1137,7 @@ function goHome() {
 }
 
 function prevExercise() {
+  const workout = getWorkoutData(currentUser);
   if (currentExercise > 0) {
     currentExercise--;
     updateExerciseScreen();
@@ -765,7 +1145,8 @@ function prevExercise() {
 }
 
 function nextExercise() {
-  const exercises = workoutData[currentDay];
+  const workout = getWorkoutData(currentUser);
+  const exercises = workout[currentDay];
   if (currentExercise < exercises.length - 1) {
     currentExercise++;
     updateExerciseScreen();
@@ -804,7 +1185,8 @@ function getTypeLabel(tipo) {
 }
 
 function updateExerciseScreen() {
-  const exercises = workoutData[currentDay];
+  const workout = getWorkoutData(currentUser);
+  const exercises = workout[currentDay];
   const exercise = exercises[currentExercise];
   const total = exercises.length;
   const progress = ((currentExercise + 1) / total) * 100;
@@ -833,11 +1215,11 @@ function updateExerciseScreen() {
   `;
   
   if (exercise.tipo !== 'corpo_libero' && exercise.tipo !== 'cardio') {
-    const savedPhoto = getPhoto(exercise.id);
+    const savedPhoto = getPhoto(currentExercise);
     const imageUrl = savedPhoto || `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Crect fill='%23e5e7eb' width='200' height='200'/%3E%3Ctext x='50%25' y='45%25' text-anchor='middle' dy='.3em' fill='%239ca3af' font-family='sans-serif' font-size='14'%3ETechnogym%3C/text%3E%3Ctext x='50%25' y='60%25' text-anchor='middle' dy='.3em' fill='%23b0b0b0' font-family='sans-serif' font-size='9'%3E${encodeURIComponent(exercise.nome)}%3C/text%3E%3C/svg%3E`;
     
     html += `
-      <div class="exercise-image" onclick="handlePhotoClick('${exercise.id}')">
+      <div class="exercise-image" onclick="handlePhotoClick(${currentExercise})">
         <img src="${imageUrl}" alt="${exercise.nome}">
         <div class="photo-overlay">📷</div>
       </div>
@@ -846,6 +1228,7 @@ function updateExerciseScreen() {
   
   html += `
     <div class="info-box">
+      <button class="edit-exercise-btn" onclick="quickEditExercise()">✏️ Modifica</button>
       <div class="info-row">
         <div class="info-item">
           <label>Serie</label>
@@ -900,6 +1283,25 @@ function updateExerciseScreen() {
   document.getElementById('exerciseContent').scrollTop = 0;
 }
 
+function quickEditExercise() {
+  editingDay = currentDay;
+  editingExerciseIndex = currentExercise;
+  
+  const workout = getWorkoutData(currentUser);
+  const ex = workout[currentDay][currentExercise];
+  
+  document.getElementById('editExName').value = ex.nome;
+  document.getElementById('editExTipo').value = ex.tipo;
+  document.getElementById('editExMacchina').value = ex.macchina || '';
+  document.getElementById('editExSerie').value = ex.serie;
+  document.getElementById('editExCarico').value = ex.carico;
+  document.getElementById('editExRecupero').value = ex.recupero;
+  document.getElementById('editExNote').value = ex.note || '';
+  
+  document.getElementById('exerciseScreen').classList.remove('active');
+  document.getElementById('editExerciseModal').classList.add('active');
+}
+
 // Touch swipe support
 let touchStartX = 0;
 let touchEndX = 0;
@@ -925,6 +1327,23 @@ function handleSwipe() {
     }
   }
 }
+
+// Override closeEditExerciseModal to handle back navigation
+const originalCloseEditExerciseModal = closeEditExerciseModal;
+closeEditExerciseModal = function() {
+  const wasInExerciseView = document.getElementById('exerciseScreen').classList.contains('active') === false && document.getElementById('editDayModal').classList.contains('active') === false;
+  
+  document.getElementById('editExerciseModal').classList.remove('active');
+  
+  if (wasInExerciseView) {
+    // Came from exercise view, go back to exercise
+    document.getElementById('exerciseScreen').classList.add('active');
+    updateExerciseScreen(); // Refresh in case changes were made
+  } else {
+    // Came from day edit modal
+    document.getElementById('editDayModal').classList.add('active');
+  }
+};
 
 // Initialize app
 window.addEventListener('DOMContentLoaded', () => {
