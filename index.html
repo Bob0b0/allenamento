@@ -6,9 +6,6 @@
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="Allenamento">
-  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
-  <meta http-equiv="Pragma" content="no-cache">
-  <meta http-equiv="Expires" content="0">
   <title>Allenamento Roberto</title>
   <style>
     * {
@@ -205,12 +202,34 @@
       padding: 1rem;
       margin-bottom: 1rem;
       text-align: center;
+      position: relative;
+      cursor: pointer;
+    }
+    
+    .exercise-image:active {
+      opacity: 0.8;
     }
     
     .exercise-image img {
       width: 100%;
       height: 200px;
       object-fit: contain;
+    }
+    
+    .photo-overlay {
+      position: absolute;
+      top: 0.5rem;
+      right: 0.5rem;
+      background: rgba(59, 130, 246, 0.9);
+      color: white;
+      border-radius: 50%;
+      width: 2.5rem;
+      height: 2.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.2rem;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
     }
     
     .info-box {
@@ -384,9 +403,16 @@
       margin-top: 1rem;
       line-height: 1.5;
     }
+    
+    /* Hidden file input */
+    #photoInput {
+      display: none;
+    }
   </style>
 </head>
 <body>
+
+<input type="file" id="photoInput" accept="image/*" capture="environment">
 
 <div class="screen active home-screen" id="homeScreen">
   <div class="home-title">
@@ -398,21 +424,21 @@
   <div class="day-buttons">
     <button class="day-btn" onclick="selectDay('A')">
       <div class="day-name">Giorno A</div>
-      <div class="day-count" id="countA">9 esercizi</div>
+      <div class="day-count">9 esercizi</div>
     </button>
     <button class="day-btn" onclick="selectDay('B')">
       <div class="day-name">Giorno B</div>
-      <div class="day-count" id="countB">10 esercizi</div>
+      <div class="day-count">10 esercizi</div>
     </button>
     <button class="day-btn" onclick="selectDay('C')">
       <div class="day-name">Giorno C</div>
-      <div class="day-count" id="countC">9 esercizi</div>
+      <div class="day-count">9 esercizi</div>
     </button>
   </div>
   
   <div class="footer-tip">
-    Swipe → per navigare tra gli esercizi<br>
-    Tutte le serie a cedimento
+    📸 Tocca le immagini per aggiungere foto<br>
+    Swipe → per navigare tra gli esercizi
   </div>
 </div>
 
@@ -451,7 +477,8 @@ const workoutData = {
       note: "Discesa lenta e controllata, gomiti in linea, spalle basse",
       carico: "25(10-10-9)",
       tipo: "macchina",
-      macchina: "Chest Press Convergente Technogym"
+      macchina: "Chest Press Convergente Technogym",
+      id: "A_0"
     },
     {
       nome: "Lat Machine con Triangolo",
@@ -460,7 +487,8 @@ const workoutData = {
       note: "Avambraccio perpendicolare al terreno",
       carico: "40(9-10-10)",
       tipo: "macchina",
-      macchina: "Lat Machine Technogym"
+      macchina: "Lat Machine Technogym",
+      id: "A_1"
     },
     {
       nome: "Leg Press Orizzontale",
@@ -469,7 +497,8 @@ const workoutData = {
       note: "Max profondità, 1 sec di fermo in buca",
       carico: "70(10-10-10)",
       tipo: "macchina",
-      macchina: "Leg Press Horizontal Technogym"
+      macchina: "Leg Press Horizontal Technogym",
+      id: "A_2"
     },
     {
       nome: "Lento Avanti con Manubri",
@@ -478,7 +507,8 @@ const workoutData = {
       note: "Gomiti avanti e perpendicolari al terreno, max allungamento",
       carico: "6(10) 8(9)",
       tipo: "pesi",
-      macchina: "Manubri"
+      macchina: "Manubri",
+      id: "A_3"
     },
     {
       nome: "Curl con Corda Cavo Basso",
@@ -487,7 +517,8 @@ const workoutData = {
       note: "Gomiti fissi, 1 sec di contrazione di picco",
       carico: "12,5(10-10)",
       tipo: "cavi",
-      macchina: "Cable Station Technogym"
+      macchina: "Cable Station Technogym",
+      id: "A_4"
     },
     {
       nome: "French Press con Manubri",
@@ -496,7 +527,8 @@ const workoutData = {
       note: "Panca piana, gomiti fermi, manubrio che arriva vicino alle orecchie",
       carico: "4(10-10)",
       tipo: "pesi",
-      macchina: "Manubri + Panca"
+      macchina: "Manubri + Panca",
+      id: "A_5"
     },
     {
       nome: "Plank",
@@ -504,7 +536,8 @@ const workoutData = {
       recupero: "1\"",
       note: "Mantenere schiena dritta",
       carico: "Corpo libero",
-      tipo: "corpo_libero"
+      tipo: "corpo_libero",
+      id: "A_6"
     },
     {
       nome: "Posturale",
@@ -512,7 +545,8 @@ const workoutData = {
       recupero: "-",
       note: "Tutto ciò che facciamo assieme",
       carico: "-",
-      tipo: "corpo_libero"
+      tipo: "corpo_libero",
+      id: "A_7"
     },
     {
       nome: "Cardio: Tapis Inclinato",
@@ -520,7 +554,8 @@ const workoutData = {
       recupero: "-",
       note: "Inclinazione minima 7%",
       carico: "-",
-      tipo: "cardio"
+      tipo: "cardio",
+      id: "A_8"
     }
   ],
   B: [
@@ -531,7 +566,8 @@ const workoutData = {
       note: "Monopodalico, inizia prima con la gamba debole",
       carico: "10/12,5",
       tipo: "pesi",
-      macchina: "Manubri + Step"
+      macchina: "Manubri + Step",
+      id: "B_0"
     },
     {
       nome: "Adductor Machine",
@@ -540,7 +576,8 @@ const workoutData = {
       note: "",
       carico: "20",
       tipo: "macchina",
-      macchina: "Adductor Technogym"
+      macchina: "Adductor Technogym",
+      id: "B_1"
     },
     {
       nome: "Chest Press Incline",
@@ -549,7 +586,8 @@ const workoutData = {
       note: "Scapole depresse, max allungamento",
       carico: "20",
       tipo: "macchina",
-      macchina: "Incline Chest Press Technogym"
+      macchina: "Incline Chest Press Technogym",
+      id: "B_2"
     },
     {
       nome: "Pec Fly",
@@ -558,7 +596,8 @@ const workoutData = {
       note: "Braccia semitese, allungamento max",
       carico: "10/12,5",
       tipo: "macchina",
-      macchina: "Pec Fly Technogym"
+      macchina: "Pec Fly Technogym",
+      id: "B_3"
     },
     {
       nome: "Pulley",
@@ -567,7 +606,8 @@ const workoutData = {
       note: "Adduzione scapolare completa",
       carico: "30",
       tipo: "macchina",
-      macchina: "Low Row Technogym"
+      macchina: "Low Row Technogym",
+      id: "B_4"
     },
     {
       nome: "Alzate Laterali Manubri",
@@ -576,7 +616,8 @@ const workoutData = {
       note: "Panca 75 gradi, braccia tese, segui il piano scapolare",
       carico: "5",
       tipo: "pesi",
-      macchina: "Manubri + Panca"
+      macchina: "Manubri + Panca",
+      id: "B_5"
     },
     {
       nome: "Superset: Faceaway Curl + Push Down",
@@ -585,7 +626,8 @@ const workoutData = {
       note: "Superset",
       carico: "12,5 + 10",
       tipo: "cavi",
-      macchina: "Cable Station Technogym"
+      macchina: "Cable Station Technogym",
+      id: "B_6"
     },
     {
       nome: "Crunch con Disco",
@@ -593,7 +635,8 @@ const workoutData = {
       recupero: "1\"",
       note: "Non piegare troppo il collo",
       carico: "10",
-      tipo: "corpo_libero"
+      tipo: "corpo_libero",
+      id: "B_7"
     },
     {
       nome: "Posturale",
@@ -601,7 +644,8 @@ const workoutData = {
       recupero: "-",
       note: "Tutto ciò che facciamo assieme",
       carico: "-",
-      tipo: "corpo_libero"
+      tipo: "corpo_libero",
+      id: "B_8"
     },
     {
       nome: "Cardio: Bicicletta",
@@ -609,7 +653,8 @@ const workoutData = {
       recupero: "-",
       note: "",
       carico: "-",
-      tipo: "cardio"
+      tipo: "cardio",
+      id: "B_9"
     }
   ],
   C: [
@@ -620,7 +665,8 @@ const workoutData = {
       note: "Gomiti e polsi a 45 gradi, max allungamento",
       carico: "9(9-9-9)",
       tipo: "pesi",
-      macchina: "Manubri + Panca Inclinata"
+      macchina: "Manubri + Panca Inclinata",
+      id: "C_0"
     },
     {
       nome: "Vertical Traction",
@@ -629,7 +675,8 @@ const workoutData = {
       note: "Avambraccio perpendicolare al terreno",
       carico: "35(12) 40(9)",
       tipo: "macchina",
-      macchina: "Lat Machine Technogym"
+      macchina: "Lat Machine Technogym",
+      id: "C_1"
     },
     {
       nome: "Low Row",
@@ -638,7 +685,8 @@ const workoutData = {
       note: "Adduzione scapolare",
       carico: "35(10) 45(10)",
       tipo: "macchina",
-      macchina: "Low Row Technogym"
+      macchina: "Low Row Technogym",
+      id: "C_2"
     },
     {
       nome: "Superset: Leg Extension + Leg Curl",
@@ -647,7 +695,8 @@ const workoutData = {
       note: "Superset",
       carico: "27,5(12-12)",
       tipo: "macchina",
-      macchina: "Leg Extension + Leg Curl Technogym"
+      macchina: "Leg Extension + Leg Curl Technogym",
+      id: "C_3"
     },
     {
       nome: "Shoulder Press",
@@ -656,7 +705,8 @@ const workoutData = {
       note: "Gomiti in linea di spinta, bilanciere che arriva sopra la testa",
       carico: "15(10-7)",
       tipo: "macchina",
-      macchina: "Shoulder Press Technogym"
+      macchina: "Shoulder Press Technogym",
+      id: "C_4"
     },
     {
       nome: "Superset: Curl su Panca 45 + Push Down",
@@ -665,7 +715,8 @@ const workoutData = {
       note: "Superset",
       carico: "7(10-10) 15(12-12)",
       tipo: "cavi",
-      macchina: "Cable Station + Panca"
+      macchina: "Cable Station + Panca",
+      id: "C_5"
     },
     {
       nome: "Plank",
@@ -673,7 +724,8 @@ const workoutData = {
       recupero: "1\"",
       note: "Mantenere schiena dritta",
       carico: "Corpo libero",
-      tipo: "corpo_libero"
+      tipo: "corpo_libero",
+      id: "C_6"
     },
     {
       nome: "Posturale",
@@ -681,7 +733,8 @@ const workoutData = {
       recupero: "-",
       note: "Tutto ciò che facciamo assieme",
       carico: "-",
-      tipo: "corpo_libero"
+      tipo: "corpo_libero",
+      id: "C_7"
     },
     {
       nome: "Cardio: Tapis Inclinato",
@@ -689,13 +742,47 @@ const workoutData = {
       recupero: "-",
       note: "Inclinazione minima 7%",
       carico: "-",
-      tipo: "cardio"
+      tipo: "cardio",
+      id: "C_8"
     }
   ]
 };
 
 let currentDay = null;
 let currentExercise = 0;
+let currentPhotoExerciseId = null;
+
+// Photo management
+function getPhotoKey(exerciseId) {
+  return `photo_${exerciseId}`;
+}
+
+function savePhoto(exerciseId, photoData) {
+  localStorage.setItem(getPhotoKey(exerciseId), photoData);
+}
+
+function getPhoto(exerciseId) {
+  return localStorage.getItem(getPhotoKey(exerciseId));
+}
+
+function handlePhotoClick(exerciseId) {
+  currentPhotoExerciseId = exerciseId;
+  document.getElementById('photoInput').click();
+}
+
+document.getElementById('photoInput').addEventListener('change', function(e) {
+  const file = e.target.files[0];
+  if (file && currentPhotoExerciseId) {
+    const reader = new FileReader();
+    reader.onload = function(event) {
+      savePhoto(currentPhotoExerciseId, event.target.result);
+      updateExerciseScreen();
+    };
+    reader.readAsDataURL(file);
+  }
+  // Reset input
+  e.target.value = '';
+});
 
 function selectDay(day) {
   currentDay = day;
@@ -792,12 +879,15 @@ function updateExerciseScreen() {
     </div>
   `;
   
-  // Add image placeholder for machines (with unique key to force re-render)
+  // Add image with photo capability for machines and pesi
   if (exercise.tipo !== 'corpo_libero' && exercise.tipo !== 'cardio') {
-    const imageKey = `${currentDay}_${currentExercise}_${Date.now()}`;
+    const savedPhoto = getPhoto(exercise.id);
+    const imageUrl = savedPhoto || `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Crect fill='%23e5e7eb' width='200' height='200'/%3E%3Ctext x='50%25' y='45%25' text-anchor='middle' dy='.3em' fill='%239ca3af' font-family='sans-serif' font-size='14'%3ETechnogym%3C/text%3E%3Ctext x='50%25' y='60%25' text-anchor='middle' dy='.3em' fill='%23b0b0b0' font-family='sans-serif' font-size='9'%3E${encodeURIComponent(exercise.nome)}%3C/text%3E%3C/svg%3E`;
+    
     html += `
-      <div class="exercise-image">
-        <img key="${imageKey}" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Crect fill='%23e5e7eb' width='200' height='200'/%3E%3Ctext x='50%25' y='50%25' text-anchor='middle' dy='.3em' fill='%239ca3af' font-family='sans-serif' font-size='14'%3ETechnogym%3C/text%3E%3Ctext x='50%25' y='65%25' text-anchor='middle' dy='.3em' fill='%239ca3af' font-family='sans-serif' font-size='10'%3E${exercise.nome}%3C/text%3E%3C/svg%3E" alt="${exercise.nome}" loading="eager">
+      <div class="exercise-image" onclick="handlePhotoClick('${exercise.id}')">
+        <img src="${imageUrl}" alt="${exercise.nome}">
+        <div class="photo-overlay">📷</div>
       </div>
     `;
   }
@@ -888,20 +978,6 @@ function handleSwipe() {
     }
   }
 }
-
-// Force re-render when app becomes visible (fixes iOS caching issue)
-document.addEventListener('visibilitychange', () => {
-  if (!document.hidden && currentDay) {
-    updateExerciseScreen();
-  }
-});
-
-// Also re-render on page show (back button on iOS)
-window.addEventListener('pageshow', (event) => {
-  if (event.persisted && currentDay) {
-    updateExerciseScreen();
-  }
-});
 </script>
 
 </body>
