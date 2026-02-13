@@ -210,12 +210,12 @@
     }
     
     .day-btn {
-      background: rgba(255, 255, 255, 0.25);
+      background: rgba(255, 255, 255, 0.35);
       backdrop-filter: blur(10px);
-      border: 2px solid rgba(255, 255, 255, 0.4);
+      border: 2px solid rgba(255, 255, 255, 0.5);
       border-radius: 1.5rem;
       padding: 2rem;
-      color: white;
+      color: #1a1a2e;
       font-size: 1.2rem;
       cursor: pointer;
       transition: all 0.2s;
@@ -225,7 +225,7 @@
     
     .day-btn:active {
       transform: scale(0.95);
-      background: rgba(255, 255, 255, 0.35);
+      background: rgba(255, 255, 255, 0.45);
     }
     
     .day-edit-btn {
@@ -741,17 +741,17 @@
   
   <div class="day-buttons">
     <button class="day-btn" onclick="selectDay('A')">
-      <button class="day-edit-btn" onclick="event.stopPropagation(); editDay('A')">✏️</button>
+      <div class="day-edit-btn" onclick="event.stopPropagation(); editDay('A')">✏️</div>
       <div class="day-name">Giorno A</div>
       <div class="day-count" id="countA">0 esercizi</div>
     </button>
     <button class="day-btn" onclick="selectDay('B')">
-      <button class="day-edit-btn" onclick="event.stopPropagation(); editDay('B')">✏️</button>
+      <div class="day-edit-btn" onclick="event.stopPropagation(); editDay('B')">✏️</div>
       <div class="day-name">Giorno B</div>
       <div class="day-count" id="countB">0 esercizi</div>
     </button>
     <button class="day-btn" onclick="selectDay('C')">
-      <button class="day-edit-btn" onclick="event.stopPropagation(); editDay('C')">✏️</button>
+      <div class="day-edit-btn" onclick="event.stopPropagation(); editDay('C')">✏️</div>
       <div class="day-name">Giorno C</div>
       <div class="day-count" id="countC">0 esercizi</div>
     </button>
