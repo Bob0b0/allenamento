@@ -410,6 +410,108 @@
       width: 24px;
       border-radius: 4px;
     }
+    
+    /* Import/Export Modal */
+    .backup-link {
+      margin-top: 2rem;
+      text-align: center;
+      color: white;
+      opacity: 0.7;
+      font-size: 0.9rem;
+      text-decoration: underline;
+      cursor: pointer;
+      transition: opacity 0.2s;
+    }
+    
+    .backup-link:hover {
+      opacity: 1;
+    }
+    
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .modal-overlay.active {
+      display: flex;
+    }
+    
+    .modal-content {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      border-radius: 1.5rem;
+      padding: 2rem;
+      max-width: 400px;
+      width: 90%;
+      color: white;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    }
+    
+    .modal-title {
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+    
+    .modal-buttons {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .modal-btn {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 1rem;
+      padding: 1rem;
+      color: white;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .modal-btn:active {
+      transform: scale(0.95);
+      background: rgba(255, 255, 255, 0.2);
+    }
+    
+    .modal-info {
+      background: rgba(59, 130, 246, 0.2);
+      border: 1px solid rgba(59, 130, 246, 0.5);
+      border-radius: 0.8rem;
+      padding: 1rem;
+      margin-bottom: 1.5rem;
+      font-size: 0.85rem;
+      text-align: center;
+      opacity: 0.9;
+    }
+    
+    .modal-close {
+      background: rgba(239, 68, 68, 0.3);
+      border: 1px solid rgba(239, 68, 68, 0.5);
+      border-radius: 1rem;
+      padding: 0.8rem;
+      color: white;
+      font-size: 1rem;
+      cursor: pointer;
+      width: 100%;
+      transition: all 0.2s;
+    }
+    
+    .modal-close:active {
+      transform: scale(0.95);
+      background: rgba(239, 68, 68, 0.4);
+    }
   </style>
 </head>
 <body>
@@ -419,7 +521,7 @@
   <div class="home-title">
     <h1>💪 Allenamento</h1>
     <div class="home-subtitle">Scegli il tuo giorno</div>
-    <div class="home-info">Roberto's Workout Plan</div>
+    <div class="home-info">Personal Workout Plan</div>
   </div>
   <div class="day-buttons">
     <button class="day-btn" onclick="selectDay('A')">
@@ -435,7 +537,36 @@
       <div class="day-count">9 esercizi</div>
     </button>
   </div>
+  <div class="backup-link" onclick="openBackupModal()">
+    Import/Export Dati
+  </div>
 </div>
+
+<!-- Backup/Restore Modal -->
+<div id="backupModal" class="modal-overlay">
+  <div class="modal-content">
+    <div class="modal-title">💾 Gestione Dati</div>
+    
+    <div class="modal-buttons">
+      <button class="modal-btn" onclick="exportData()">
+        📥 Export
+      </button>
+      <button class="modal-btn" onclick="document.getElementById('importInput').click()">
+        📤 Import
+      </button>
+    </div>
+    
+    <div class="modal-info">
+      I dati sono salvati sullo smartphone in Download
+    </div>
+    
+    <button class="modal-close" onclick="closeBackupModal()">
+      Torna al Menu
+    </button>
+  </div>
+</div>
+
+<input type="file" id="importInput" accept=".json" style="display: none;">
 
 <!-- Exercise Screen -->
 <div id="exerciseScreen" class="screen exercise-screen">
@@ -812,6 +943,79 @@ function handlePhotoClick(exerciseId) {
   currentPhotoExerciseId = exerciseId;
   document.getElementById('photoInput').click();
 }
+
+// Backup/Restore Modal
+function openBackupModal() {
+  document.getElementById('backupModal').classList.add('active');
+}
+
+function closeBackupModal() {
+  document.getElementById('backupModal').classList.remove('active');
+}
+
+function exportData() {
+  const allData = {};
+  
+  // Collect all localStorage data
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    if (key.startsWith('photo_') || key.startsWith('edit_')) {
+      allData[key] = localStorage.getItem(key);
+    }
+  }
+  
+  // Create JSON file
+  const dataStr = JSON.stringify(allData, null, 2);
+  const dataBlob = new Blob([dataStr], { type: 'application/json' });
+  
+  // Create download link
+  const url = URL.createObjectURL(dataBlob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = `allenamento_backup_${new Date().toISOString().split('T')[0]}.json`;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+  
+  // Show confirmation
+  alert('✅ Dati esportati con successo!\nIl file è stato salvato in Download.');
+  closeBackupModal();
+}
+
+function importData() {
+  const file = document.getElementById('importInput').files[0];
+  if (!file) return;
+  
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const data = JSON.parse(e.target.result);
+      
+      // Restore all data to localStorage
+      Object.keys(data).forEach(key => {
+        localStorage.setItem(key, data[key]);
+      });
+      
+      // Show confirmation
+      alert('✅ Dati importati con successo!\nL\'app è stata aggiornata con i dati del backup.');
+      closeBackupModal();
+      
+      // Refresh if on exercise screen
+      if (currentDay) {
+        updateExerciseScreen();
+      }
+    } catch (error) {
+      alert('❌ Errore nell\'importazione.\nIl file potrebbe essere corrotto o non valido.');
+    }
+  };
+  reader.readAsText(file);
+  
+  // Reset input
+  document.getElementById('importInput').value = '';
+}
+
+document.getElementById('importInput').addEventListener('change', importData);
 
 document.getElementById('photoInput').addEventListener('change', function(e) {
   const file = e.target.files[0];
