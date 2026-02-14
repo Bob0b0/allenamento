@@ -193,6 +193,9 @@
       font-size: 1.8rem;
       font-weight: bold;
       margin-bottom: 0.3rem;
+      white-space: normal;
+      word-wrap: break-word;
+      line-height: 1.2;
     }
     
     .machine-name {
@@ -237,88 +240,39 @@
       box-shadow: 0 2px 8px rgba(0,0,0,0.3);
     }
     
-    .info-box {
+    /* NEW: Series Table */
+    .series-table {
       background: rgba(0, 0, 0, 0.3);
       border-radius: 1rem;
       padding: 1.5rem;
       margin-bottom: 1rem;
     }
     
-    .info-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1rem;
-      margin-bottom: 1rem;
-      padding-bottom: 1rem;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    .series-table table {
+      width: 100%;
+      border-collapse: collapse;
     }
     
-    .info-item label {
-      display: block;
+    .series-table th {
       font-size: 0.7rem;
       text-transform: uppercase;
       opacity: 0.6;
-      margin-bottom: 0.3rem;
+      padding-bottom: 0.8rem;
+      text-align: center;
+      font-weight: 600;
+      letter-spacing: 0.05em;
     }
     
-    .info-item value {
-      display: block;
-      font-size: 1.2rem;
-      font-weight: bold;
-    }
-    
-    .carico-section {
-      border-top: 1px solid rgba(255, 255, 255, 0.1);
-      padding-top: 1rem;
-    }
-    
-    .carico-main {
-      display: flex;
-      align-items: baseline;
-      gap: 0.5rem;
-      margin-bottom: 1rem;
-    }
-    
-    .carico-peso {
-      font-size: 2.5rem;
-      font-weight: bold;
-      color: #3b82f6;
-    }
-    
-    .carico-unit {
-      font-size: 1rem;
-      opacity: 0.6;
-    }
-    
-    .serie-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
-      gap: 0.5rem;
-      margin-top: 1rem;
-    }
-    
-    .serie-box {
-      background: rgba(0, 0, 0, 0.3);
-      border-radius: 0.5rem;
+    .series-table td {
       padding: 0.8rem;
       text-align: center;
-    }
-    
-    .serie-label {
-      font-size: 0.7rem;
-      opacity: 0.6;
-      margin-bottom: 0.3rem;
-    }
-    
-    .serie-reps {
-      font-size: 1.3rem;
+      font-size: 1.2rem;
       font-weight: bold;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
     }
     
-    .serie-unit {
-      font-size: 0.7rem;
-      opacity: 0.6;
-      margin-top: 0.2rem;
+    .series-table tr:first-child td {
+      border-top: none;
     }
     
     .notes-box {
@@ -329,59 +283,115 @@
     }
     
     .notes-title {
-      font-size: 0.7rem;
-      text-transform: uppercase;
-      color: #fbbf24;
+      font-size: 0.8rem;
       font-weight: bold;
+      text-transform: uppercase;
+      opacity: 0.8;
       margin-bottom: 0.5rem;
     }
     
     .notes-text {
-      font-size: 0.9rem;
-      color: #fef3c7;
+      font-size: 0.95rem;
       line-height: 1.5;
     }
     
-    .bottom-nav {
-      background: rgba(0, 0, 0, 0.3);
-      padding: 1rem;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border-top: 1px solid rgba(255, 255, 255, 0.1);
-    }
-    
-    .nav-btn {
-      background: #3b82f6;
-      border: none;
-      border-radius: 50%;
-      width: 3.5rem;
-      height: 3.5rem;
+    /* Edit Mode */
+    .edit-btn {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 0.5rem;
+      padding: 0.4rem 0.8rem;
       color: white;
-      font-size: 1.5rem;
       cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      font-size: 0.9rem;
+      margin-left: 0.5rem;
       transition: all 0.2s;
     }
     
-    .nav-btn:active {
-      transform: scale(0.9);
+    .edit-btn:active {
+      transform: scale(0.95);
+      background: rgba(255, 255, 255, 0.2);
+    }
+    
+    .edit-btn.save-btn {
+      background: rgba(16, 185, 129, 0.3);
+      border-color: rgba(16, 185, 129, 0.5);
+    }
+    
+    .editable-name {
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid rgba(59, 130, 246, 0.5);
+      border-radius: 0.5rem;
+      padding: 0.5rem;
+      color: white;
+      font-size: 1.8rem;
+      font-weight: bold;
+      width: 100%;
+      margin-bottom: 0.3rem;
+      white-space: normal;
+      word-wrap: break-word;
+      line-height: 1.2;
+      min-height: 2.5rem;
+    }
+    
+    .editable-cell input {
+      background: rgba(255, 255, 255, 0.1);
+      border: 2px solid rgba(59, 130, 246, 0.5);
+      border-radius: 0.3rem;
+      padding: 0.5rem;
+      color: white;
+      font-size: 1.2rem;
+      font-weight: bold;
+      width: 100%;
+      text-align: center;
+    }
+    
+    .editable-cell input:focus,
+    .editable-name:focus {
+      outline: none;
+      border-color: rgba(59, 130, 246, 0.8);
+      background: rgba(255, 255, 255, 0.15);
+    }
+    
+    .nav-footer {
+      background: rgba(0, 0, 0, 0.3);
+      padding: 1rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+    
+    .nav-btn {
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      border-radius: 0.5rem;
+      padding: 0.75rem 1.5rem;
+      color: white;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: all 0.2s;
+      min-width: 80px;
     }
     
     .nav-btn:disabled {
-      background: rgba(255, 255, 255, 0.1);
-      color: rgba(255, 255, 255, 0.3);
+      opacity: 0.3;
       cursor: not-allowed;
+    }
+    
+    .nav-btn:active:not(:disabled) {
+      transform: scale(0.95);
+      background: rgba(255, 255, 255, 0.2);
     }
     
     .nav-dots {
       display: flex;
-      gap: 0.3rem;
+      gap: 0.5rem;
       flex: 1;
       justify-content: center;
-      padding: 0 1rem;
+      overflow-x: auto;
+      padding: 0.25rem;
     }
     
     .nav-dot {
@@ -390,64 +400,176 @@
       border-radius: 50%;
       background: rgba(255, 255, 255, 0.3);
       border: none;
-      padding: 0;
       cursor: pointer;
+      padding: 0;
       transition: all 0.2s;
     }
     
     .nav-dot.active {
-      width: 32px;
-      border-radius: 4px;
       background: #3b82f6;
+      width: 24px;
+      border-radius: 4px;
     }
     
-    .footer-tip {
+    /* Import/Export Modal */
+    .backup-link {
+      margin-top: 2rem;
       text-align: center;
-      color: rgba(255, 255, 255, 0.5);
-      font-size: 0.85rem;
-      margin-top: 1rem;
-      line-height: 1.5;
+      color: white;
+      opacity: 0.7;
+      font-size: 0.9rem;
+      text-decoration: underline;
+      cursor: pointer;
+      transition: opacity 0.2s;
     }
     
-    /* Hidden file input */
-    #photoInput {
+    .backup-link:hover {
+      opacity: 1;
+    }
+    
+    .modal-overlay {
       display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.8);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+    }
+    
+    .modal-overlay.active {
+      display: flex;
+    }
+    
+    .modal-content {
+      background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+      border-radius: 1.5rem;
+      padding: 2rem;
+      max-width: 400px;
+      width: 90%;
+      color: white;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+    }
+    
+    .modal-title {
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin-bottom: 1.5rem;
+      text-align: center;
+    }
+    
+    .modal-buttons {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    
+    .modal-btn {
+      flex: 1;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: 1rem;
+      padding: 1rem;
+      color: white;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    
+    .modal-btn:active {
+      transform: scale(0.95);
+      background: rgba(255, 255, 255, 0.2);
+    }
+    
+    .modal-info {
+      background: rgba(59, 130, 246, 0.2);
+      border: 1px solid rgba(59, 130, 246, 0.5);
+      border-radius: 0.8rem;
+      padding: 1rem;
+      margin-bottom: 1.5rem;
+      font-size: 0.85rem;
+      text-align: center;
+      opacity: 0.9;
+    }
+    
+    .modal-close {
+      background: rgba(239, 68, 68, 0.3);
+      border: 1px solid rgba(239, 68, 68, 0.5);
+      border-radius: 1rem;
+      padding: 0.8rem;
+      color: white;
+      font-size: 1rem;
+      cursor: pointer;
+      width: 100%;
+      transition: all 0.2s;
+    }
+    
+    .modal-close:active {
+      transform: scale(0.95);
+      background: rgba(239, 68, 68, 0.4);
     }
   </style>
 </head>
 <body>
 
-<input type="file" id="photoInput" accept="image/*">
-
-<div class="screen active home-screen" id="homeScreen">
+<!-- Home Screen -->
+<div id="homeScreen" class="screen home-screen active">
   <div class="home-title">
     <h1>💪 Allenamento</h1>
-    <div class="home-subtitle">Programma di _____________</div>
-    <div class="home-info">Personal Trainer: _____________</div>
+    <div class="home-subtitle">Scegli il tuo giorno</div>
+    <div class="home-info">Personal Workout Plan</div>
   </div>
-  
   <div class="day-buttons">
     <button class="day-btn" onclick="selectDay('A')">
-      <div class="day-name">Giorno A</div>
+      <div class="day-name">A</div>
       <div class="day-count">9 esercizi</div>
     </button>
     <button class="day-btn" onclick="selectDay('B')">
-      <div class="day-name">Giorno B</div>
-      <div class="day-count">10 esercizi</div>
+      <div class="day-name">B</div>
+      <div class="day-count">9 esercizi</div>
     </button>
     <button class="day-btn" onclick="selectDay('C')">
-      <div class="day-name">Giorno C</div>
+      <div class="day-name">C</div>
       <div class="day-count">9 esercizi</div>
     </button>
   </div>
-  
-  <div class="footer-tip">
-    📸 Tocca le immagini per aggiungere foto<br>
-    Swipe → per navigare tra gli esercizi
+  <div class="backup-link" onclick="openBackupModal()">
+    Import/Export Dati
   </div>
 </div>
 
-<div class="screen exercise-screen" id="exerciseScreen">
+<!-- Backup/Restore Modal -->
+<div id="backupModal" class="modal-overlay">
+  <div class="modal-content">
+    <div class="modal-title">💾 Gestione Dati</div>
+    
+    <div class="modal-buttons">
+      <button class="modal-btn" onclick="exportData()">
+        📥 Export
+      </button>
+      <button class="modal-btn" onclick="document.getElementById('importInput').click()">
+        📤 Import
+      </button>
+    </div>
+    
+    <div class="modal-info">
+      I dati sono salvati sullo smartphone in Download
+    </div>
+    
+    <button class="modal-close" onclick="closeBackupModal()">
+      Torna al Menu
+    </button>
+  </div>
+</div>
+
+<input type="file" id="importInput" accept=".json" style="display: none;">
+
+<!-- Exercise Screen -->
+<div id="exerciseScreen" class="screen exercise-screen">
   <div class="top-bar">
     <button class="home-btn" onclick="goHome()">🏠</button>
     <div class="top-info">
@@ -462,77 +584,79 @@
   </div>
   
   <div class="exercise-content" id="exerciseContent">
-    <!-- Contenuto dinamico -->
+    <!-- Content will be dynamically inserted -->
   </div>
   
-  <div class="bottom-nav">
-    <button class="nav-btn" id="prevBtn" onclick="prevExercise()">‹</button>
+  <div class="nav-footer">
+    <button class="nav-btn" id="prevBtn" onclick="prevExercise()">◀ Prec</button>
     <div class="nav-dots" id="navDots"></div>
-    <button class="nav-btn" id="nextBtn" onclick="nextExercise()">›</button>
+    <button class="nav-btn" id="nextBtn" onclick="nextExercise()">Succ ▶</button>
   </div>
 </div>
+
+<input type="file" id="photoInput" accept="image/*" style="display: none;">
 
 <script>
 const workoutData = {
   A: [
     {
-      nome: "Chest Press Convergente",
+      nome: "Leg Press",
       serie: "3 x 8/10",
       recupero: "3\"",
-      note: "Discesa lenta e controllata, gomiti in linea, spalle basse",
-      carico: "25(10-10-9)",
+      note: "Spingere con i talloni, non chiudere completamente le ginocchia",
+      carico: "80(12-12-10)",
       tipo: "macchina",
-      macchina: "Chest Press Convergente Technogym",
+      macchina: "Leg Press Technogym",
       id: "A_0"
     },
     {
-      nome: "Lat Machine con Triangolo",
-      serie: "3 x 7/9",
-      recupero: "2\"",
-      note: "Avambraccio perpendicolare al terreno",
-      carico: "40(9-10-10)",
+      nome: "Chest Press",
+      serie: "3 x 6/9",
+      recupero: "3\"",
+      note: "Adduzione scapolare, gomiti non oltre 90 gradi",
+      carico: "30(10) 35(9-7)",
       tipo: "macchina",
-      macchina: "Lat Machine Technogym",
+      macchina: "Chest Press Technogym",
       id: "A_1"
     },
     {
-      nome: "Leg Press Orizzontale",
-      serie: "3 x 8/10",
-      recupero: "3\"",
-      note: "Max profondità, 1 sec di fermo in buca",
-      carico: "70(10-10-10)",
+      nome: "Vertical Traction",
+      serie: "2 x 7/9",
+      recupero: "2\"",
+      note: "Avambraccio perpendicolare al terreno",
+      carico: "35(12) 40(9)",
       tipo: "macchina",
-      macchina: "Leg Press Horizontal Technogym",
+      macchina: "Lat Machine Technogym",
       id: "A_2"
     },
     {
-      nome: "Lento Avanti con Manubri",
-      serie: "2 x 6/9",
+      nome: "Low Row",
+      serie: "2 x 7/9",
       recupero: "2\"",
-      note: "Gomiti avanti e perpendicolari al terreno, max allungamento",
-      carico: "6(10) 8(9)",
-      tipo: "pesi",
-      macchina: "Manubri",
+      note: "Adduzione scapolare",
+      carico: "35(10) 45(10)",
+      tipo: "macchina",
+      macchina: "Low Row Technogym",
       id: "A_3"
     },
     {
-      nome: "Curl con Corda Cavo Basso",
-      serie: "2 x 8/10",
+      nome: "Shoulder Press",
+      serie: "2 x 6/9",
       recupero: "2\"",
-      note: "Gomiti fissi, 1 sec di contrazione di picco",
-      carico: "12,5(10-10)",
-      tipo: "cavi",
-      macchina: "Cable Station Technogym",
+      note: "Gomiti in linea di spinta, bilanciere che arriva sopra la testa",
+      carico: "15(10-7)",
+      tipo: "macchina",
+      macchina: "Shoulder Press Technogym",
       id: "A_4"
     },
     {
-      nome: "French Press con Manubri",
-      serie: "2 x 8/10",
+      nome: "Superset: Curl su Panca 45 + Push Down",
+      serie: "3 x 10+10",
       recupero: "2\"",
-      note: "Panca piana, gomiti fermi, manubrio che arriva vicino alle orecchie",
-      carico: "4(10-10)",
-      tipo: "pesi",
-      macchina: "Manubri + Panca",
+      note: "Superset",
+      carico: "7(10-10) 15(12-12)",
+      tipo: "cavi",
+      macchina: "Cable Station + Panca",
       id: "A_5"
     },
     {
@@ -554,10 +678,10 @@ const workoutData = {
       id: "A_7"
     },
     {
-      nome: "Cardio: Tapis Inclinato",
+      nome: "Cardio: Cyclette",
       serie: "20 minuti",
       recupero: "-",
-      note: "Inclinazione minima 7%",
+      note: "Mantenere 60-70 RPM",
       carico: "-",
       tipo: "cardio",
       id: "A_8"
@@ -565,83 +689,73 @@ const workoutData = {
   ],
   B: [
     {
-      nome: "Step Up",
+      nome: "Squat al Multipower",
       serie: "3 x 8/10",
-      recupero: "2\"",
-      note: "Monopodalico, inizia prima con la gamba debole",
-      carico: "10/12,5",
-      tipo: "pesi",
-      macchina: "Manubri + Step",
+      recupero: "3\"",
+      note: "Talloni su rialzo, punte dei piedi a 45 gradi. Ginocchia in fuori",
+      carico: "20(12-12-10)",
+      tipo: "macchina",
+      macchina: "Multipower",
       id: "B_0"
     },
     {
-      nome: "Adductor Machine",
-      serie: "2 x 10/12",
-      recupero: "1'30\"",
-      note: "",
-      carico: "20",
+      nome: "Incline Press",
+      serie: "3 x 6/9",
+      recupero: "3\"",
+      note: "Adduzione scapolare, gomiti non oltre 90 gradi. Fare attenzione al meccanismo di aggancio con il piede destro",
+      carico: "20(12) 25(10-8)",
       tipo: "macchina",
-      macchina: "Adductor Technogym",
+      macchina: "Incline Press Technogym",
       id: "B_1"
     },
     {
-      nome: "Chest Press Incline",
-      serie: "2 x 8/10",
+      nome: "Lat Machine Presa Neutra Stretta",
+      serie: "2 x 7/9",
       recupero: "2\"",
-      note: "Scapole depresse, max allungamento",
-      carico: "20",
+      note: "Presa neutra stretta, portare i gomiti al corpo",
+      carico: "35(12) 40(10)",
       tipo: "macchina",
-      macchina: "Incline Chest Press Technogym",
+      macchina: "Lat Machine Technogym",
       id: "B_2"
     },
     {
-      nome: "Pec Fly",
-      serie: "2 x 8/10",
+      nome: "Pulley Basso",
+      serie: "2 x 7/9",
       recupero: "2\"",
-      note: "Braccia semitese, allungamento max",
-      carico: "10/12,5",
-      tipo: "macchina",
-      macchina: "Pec Fly Technogym",
+      note: "Schiena quasi parallela al terreno",
+      carico: "25(12) 30(10)",
+      tipo: "cavi",
+      macchina: "Cable Station",
       id: "B_3"
     },
     {
-      nome: "Pulley",
-      serie: "3 x 8/10",
+      nome: "Alzate Laterali",
+      serie: "2 x 8/10",
       recupero: "2\"",
-      note: "Adduzione scapolare completa",
-      carico: "30",
-      tipo: "macchina",
-      macchina: "Low Row Technogym",
+      note: "Gomiti leggermente piegati. Non superare la linea delle spalle",
+      carico: "5(12-10)",
+      tipo: "pesi",
+      macchina: "Manubri",
       id: "B_4"
     },
     {
-      nome: "Alzate Laterali Manubri",
-      serie: "3 x 10/12",
+      nome: "Superset: Curl ai Cavi + French Press con Corda",
+      serie: "3 x 10+10",
       recupero: "2\"",
-      note: "Panca 75 gradi, braccia tese, segui il piano scapolare",
-      carico: "5",
-      tipo: "pesi",
-      macchina: "Manubri + Panca",
+      note: "Superset",
+      carico: "15(12-12) 15(12-12)",
+      tipo: "cavi",
+      macchina: "Cable Station",
       id: "B_5"
     },
     {
-      nome: "Superset: Faceaway Curl + Push Down",
-      serie: "2 x 10+10",
-      recupero: "2\"",
-      note: "Superset",
-      carico: "12,5 + 10",
-      tipo: "cavi",
-      macchina: "Cable Station Technogym",
-      id: "B_6"
-    },
-    {
-      nome: "Crunch con Disco",
-      serie: "3 x 12/15",
+      nome: "Crunch",
+      serie: "3 x 15",
       recupero: "1\"",
-      note: "Non piegare troppo il collo",
-      carico: "10",
+      note: "Mani dietro la testa, non tirare il collo",
+      carico: "Corpo libero",
       tipo: "corpo_libero",
-      id: "B_7"
+      id: "B_6"
     },
     {
       nome: "Posturale",
@@ -650,16 +764,16 @@ const workoutData = {
       note: "Tutto ciò che facciamo assieme",
       carico: "-",
       tipo: "corpo_libero",
-      id: "B_8"
+      id: "B_7"
     },
     {
-      nome: "Cardio: Bicicletta",
+      nome: "Cardio: Tapis Roulant",
       serie: "20 minuti",
       recupero: "-",
-      note: "",
+      note: "Velocità moderata, pendenza 0-2%",
       carico: "-",
       tipo: "cardio",
-      id: "B_9"
+      id: "B_8"
     }
   ],
   C: [
@@ -755,6 +869,8 @@ const workoutData = {
 
 let currentDay = null;
 let currentExercise = 0;
+let editMode = false;
+let editedData = {};
 let currentPhotoExerciseId = null;
 
 // Photo management
@@ -770,17 +886,181 @@ function getPhoto(exerciseId) {
   return localStorage.getItem(getPhotoKey(exerciseId));
 }
 
+// Compress photo to reduce localStorage usage
+function compressPhoto(dataUrl, maxWidth, maxHeight, quality) {
+  return new Promise((resolve) => {
+    const img = new Image();
+    img.onload = function() {
+      // Calculate new dimensions maintaining aspect ratio
+      let width = img.width;
+      let height = img.height;
+      
+      if (width > height) {
+        if (width > maxWidth) {
+          height = (height * maxWidth) / width;
+          width = maxWidth;
+        }
+      } else {
+        if (height > maxHeight) {
+          width = (width * maxHeight) / height;
+          height = maxHeight;
+        }
+      }
+      
+      // Create canvas and compress
+      const canvas = document.createElement('canvas');
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(img, 0, 0, width, height);
+      
+      // Convert to compressed base64
+      const compressedDataUrl = canvas.toDataURL('image/jpeg', quality);
+      resolve(compressedDataUrl);
+    };
+    img.src = dataUrl;
+  });
+}
+
+// Edit mode data management
+function getEditDataKey(exerciseId) {
+  return `edit_${exerciseId}`;
+}
+
+function saveEditData(exerciseId, data) {
+  localStorage.setItem(getEditDataKey(exerciseId), JSON.stringify(data));
+}
+
+function getEditData(exerciseId) {
+  const stored = localStorage.getItem(getEditDataKey(exerciseId));
+  return stored ? JSON.parse(stored) : null;
+}
+
+function toggleEditMode() {
+  editMode = !editMode;
+  if (!editMode) {
+    // Exiting edit mode - save changes
+    saveCurrentExercise();
+  }
+  updateExerciseScreen();
+}
+
+function saveCurrentExercise() {
+  const exercise = workoutData[currentDay][currentExercise];
+  
+  // Get edited name
+  const nameInput = document.getElementById('editName');
+  if (nameInput) {
+    const newName = nameInput.value;
+    
+    // Get edited series data
+    const seriesData = [];
+    const rows = document.querySelectorAll('.series-table tbody tr');
+    rows.forEach(row => {
+      const inputs = row.querySelectorAll('input');
+      if (inputs.length === 3) {
+        seriesData.push({
+          rip: inputs[0].value,
+          kg: inputs[1].value,
+          rec: inputs[2].value
+        });
+      }
+    });
+    
+    // Save to localStorage
+    saveEditData(exercise.id, {
+      nome: newName,
+      series: seriesData
+    });
+  }
+}
+
 function handlePhotoClick(exerciseId) {
   currentPhotoExerciseId = exerciseId;
   document.getElementById('photoInput').click();
 }
 
+// Backup/Restore Modal
+function openBackupModal() {
+  document.getElementById('backupModal').classList.add('active');
+}
+
+function closeBackupModal() {
+  document.getElementById('backupModal').classList.remove('active');
+}
+
+function exportData() {
+  const allData = {};
+  
+  // Collect all localStorage data
+  for (let i = 0; i < localStorage.length; i++) {
+    const key = localStorage.key(i);
+    if (key.startsWith('photo_') || key.startsWith('edit_')) {
+      allData[key] = localStorage.getItem(key);
+    }
+  }
+  
+  // Create JSON file
+  const dataStr = JSON.stringify(allData, null, 2);
+  const dataBlob = new Blob([dataStr], { type: 'application/json' });
+  
+  // Create download link
+  const url = URL.createObjectURL(dataBlob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = `allenamento_backup_${new Date().toISOString().split('T')[0]}.json`;
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+  
+  // Show confirmation
+  alert('✅ Dati esportati con successo!\n\niPhone: Tocca "Altro..." poi "Salva su File"\nAndroid: Salvato in Download');
+  closeBackupModal();
+}
+
+function importData() {
+  const file = document.getElementById('importInput').files[0];
+  if (!file) return;
+  
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    try {
+      const data = JSON.parse(e.target.result);
+      
+      // Restore all data to localStorage
+      Object.keys(data).forEach(key => {
+        localStorage.setItem(key, data[key]);
+      });
+      
+      // Show confirmation
+      alert('✅ Dati importati con successo!\nL\'app è stata aggiornata con i dati del backup.');
+      closeBackupModal();
+      
+      // Refresh if on exercise screen
+      if (currentDay) {
+        updateExerciseScreen();
+      }
+    } catch (error) {
+      alert('❌ Errore nell\'importazione.\nIl file potrebbe essere corrotto o non valido.');
+    }
+  };
+  reader.readAsText(file);
+  
+  // Reset input
+  document.getElementById('importInput').value = '';
+}
+
+document.getElementById('importInput').addEventListener('change', importData);
+
 document.getElementById('photoInput').addEventListener('change', function(e) {
   const file = e.target.files[0];
   if (file && currentPhotoExerciseId) {
     const reader = new FileReader();
-    reader.onload = function(event) {
-      savePhoto(currentPhotoExerciseId, event.target.result);
+    reader.onload = async function(event) {
+      // Compress photo: max 800x600, quality 75%
+      const compressedPhoto = await compressPhoto(event.target.result, 800, 600, 0.75);
+      savePhoto(currentPhotoExerciseId, compressedPhoto);
       updateExerciseScreen();
     };
     reader.readAsDataURL(file);
@@ -806,6 +1086,10 @@ function goHome() {
 
 function prevExercise() {
   if (currentExercise > 0) {
+    if (editMode) {
+      saveCurrentExercise();
+      editMode = false;
+    }
     currentExercise--;
     updateExerciseScreen();
   }
@@ -814,29 +1098,62 @@ function prevExercise() {
 function nextExercise() {
   const exercises = workoutData[currentDay];
   if (currentExercise < exercises.length - 1) {
+    if (editMode) {
+      saveCurrentExercise();
+      editMode = false;
+    }
     currentExercise++;
     updateExerciseScreen();
   }
 }
 
 function jumpToExercise(index) {
+  if (editMode) {
+    saveCurrentExercise();
+    editMode = false;
+  }
   currentExercise = index;
   updateExerciseScreen();
 }
 
-function parseCarico(carico) {
+// NEW: Parse series data from carico format
+function parseSeriesData(carico, recupero) {
   if (carico === "Corpo libero" || carico === "-") {
-    return { peso: null, serie: [] };
+    return [];
   }
   
-  const match = carico.match(/^([\d,\.]+)\((.+)\)$/);
-  if (match) {
-    const peso = match[1];
-    const reps = match[2].split('-').map(r => r.trim());
-    return { peso, serie: reps };
+  // Convert recupero to seconds
+  let recSec = "-";
+  if (recupero.includes('"')) {
+    const minutes = parseInt(recupero.replace('"', ''));
+    recSec = (minutes * 60) + '"';
   }
   
-  return { peso: carico, serie: [] };
+  const series = [];
+  
+  // Pattern: "peso(reps)" or "peso(reps-reps-reps)" or "peso1(reps1) peso2(reps2)"
+  const parts = carico.match(/[\d,\.]+\([^)]+\)/g);
+  
+  if (parts) {
+    parts.forEach(part => {
+      const match = part.match(/([\d,\.]+)\((.+)\)/);
+      if (match) {
+        const peso = match[1];
+        const reps = match[2].split('-').map(r => r.trim());
+        
+        reps.forEach(rep => {
+          series.push({
+            rip: rep,
+            kg: peso,
+            rec: recSec
+          });
+        });
+      }
+    });
+  }
+  
+  // Limit to max 3 series
+  return series.slice(0, 3);
 }
 
 function getTypeLabel(tipo) {
@@ -871,18 +1188,44 @@ function updateExerciseScreen() {
   ).join('');
   document.getElementById('navDots').innerHTML = dotsHtml;
   
-  // Parse carico
-  const { peso, serie } = parseCarico(exercise.carico);
+  // Check for edited data
+  const savedEdit = getEditData(exercise.id);
+  const displayName = savedEdit ? savedEdit.nome : exercise.nome;
+  
+  // Parse series data (use saved if available)
+  let seriesData;
+  if (savedEdit && savedEdit.series) {
+    seriesData = savedEdit.series;
+  } else {
+    seriesData = parseSeriesData(exercise.carico, exercise.recupero);
+  }
   
   // Build exercise content
   let html = `
     <div class="exercise-header">
       <span class="type-badge type-${exercise.tipo}">${getTypeLabel(exercise.tipo)}</span>
       <span class="day-label">Giorno ${currentDay}</span>
-      <div class="exercise-name">${exercise.nome}</div>
-      ${exercise.macchina ? `<div class="machine-name">${exercise.macchina}</div>` : ''}
-    </div>
   `;
+  
+  // Exercise name - editable in edit mode
+  if (editMode) {
+    html += `<input type="text" id="editName" class="editable-name" value="${displayName}">`;
+  } else {
+    html += `<div class="exercise-name">${displayName}</div>`;
+  }
+  
+  html += `${exercise.macchina ? `<div class="machine-name">${exercise.macchina}` : '<div style="display:inline-block">'}`;
+  
+  // Edit button (three dots or save)
+  if (exercise.tipo !== 'corpo_libero' && exercise.tipo !== 'cardio') {
+    if (editMode) {
+      html += `<button class="edit-btn save-btn" onclick="toggleEditMode()">💾 Salva</button>`;
+    } else {
+      html += `<button class="edit-btn" onclick="toggleEditMode()">⋯</button>`;
+    }
+  }
+  
+  html += `</div></div>`;
   
   // Add image with photo capability for machines and pesi
   if (exercise.tipo !== 'corpo_libero' && exercise.tipo !== 'cardio') {
@@ -897,50 +1240,47 @@ function updateExerciseScreen() {
     `;
   }
   
-  // Info box
-  html += `
-    <div class="info-box">
-      <div class="info-row">
-        <div class="info-item">
-          <label>Serie</label>
-          <value>${exercise.serie}</value>
-        </div>
-        <div class="info-item">
-          <label>Recupero</label>
-          <value>${exercise.recupero}</value>
-        </div>
-      </div>
-  `;
-  
-  // Carico section
-  if (peso && peso !== '-') {
+  // Series table - editable in edit mode
+  if (seriesData.length > 0) {
     html += `
-      <div class="carico-section">
-        <label style="font-size: 0.7rem; text-transform: uppercase; opacity: 0.6; margin-bottom: 0.5rem; display: block;">Carico</label>
-        <div class="carico-main">
-          <span class="carico-peso">${peso}</span>
-          <span class="carico-unit">kg</span>
-        </div>
+      <div class="series-table">
+        <table>
+          <thead>
+            <tr>
+              <th>RIP</th>
+              <th>KG</th>
+              <th>REC.</th>
+            </tr>
+          </thead>
+          <tbody>
     `;
     
-    if (serie.length > 0) {
-      html += `<div class="serie-grid">`;
-      serie.forEach((reps, idx) => {
+    seriesData.forEach((serie, idx) => {
+      if (editMode) {
         html += `
-          <div class="serie-box">
-            <div class="serie-label">Serie ${idx + 1}</div>
-            <div class="serie-reps">${reps}</div>
-            <div class="serie-unit">rip</div>
-          </div>
+          <tr class="editable-cell">
+            <td><input type="text" value="${serie.rip}"></td>
+            <td><input type="text" value="${serie.kg}"></td>
+            <td><input type="text" value="${serie.rec}"></td>
+          </tr>
         `;
-      });
-      html += `</div>`;
-    }
+      } else {
+        html += `
+          <tr>
+            <td>${serie.rip}</td>
+            <td>${serie.kg}</td>
+            <td>${serie.rec}</td>
+          </tr>
+        `;
+      }
+    });
     
-    html += `</div>`;
+    html += `
+          </tbody>
+        </table>
+      </div>
+    `;
   }
-  
-  html += `</div>`;
   
   // Notes
   if (exercise.note && exercise.note !== '-') {
