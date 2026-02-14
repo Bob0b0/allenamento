@@ -872,7 +872,6 @@ let currentExercise = 0;
 let editMode = false;
 let editedData = {};
 let currentPhotoExerciseId = null;
-let photoInputHandler = null;
 
 // Photo management
 function getPhotoKey(exerciseId) {
@@ -941,40 +940,8 @@ function saveCurrentExercise() {
 }
 
 function handlePhotoClick(exerciseId) {
-  const photoInput = document.getElementById('photoInput');
-  
-  // Remove previous event listener if exists
-  if (photoInputHandler) {
-    photoInput.removeEventListener('change', photoInputHandler);
-  }
-  
-  // Reset input completely (critical for iOS)
-  photoInput.value = '';
-  photoInput.type = 'text';
-  photoInput.type = 'file';
-  
-  // Store the exercise ID
   currentPhotoExerciseId = exerciseId;
-  
-  // Create new handler
-  photoInputHandler = function(e) {
-    const file = e.target.files[0];
-    if (file && currentPhotoExerciseId) {
-      const reader = new FileReader();
-      reader.onload = function(event) {
-        savePhoto(currentPhotoExerciseId, event.target.result);
-        currentPhotoExerciseId = null;
-        updateExerciseScreen();
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-  
-  // Add event listener
-  photoInput.addEventListener('change', photoInputHandler);
-  
-  // Trigger file picker
-  photoInput.click();
+  document.getElementById('photoInput').click();
 }
 
 // Backup/Restore Modal
@@ -1049,6 +1016,20 @@ function importData() {
 }
 
 document.getElementById('importInput').addEventListener('change', importData);
+
+document.getElementById('photoInput').addEventListener('change', function(e) {
+  const file = e.target.files[0];
+  if (file && currentPhotoExerciseId) {
+    const reader = new FileReader();
+    reader.onload = function(event) {
+      savePhoto(currentPhotoExerciseId, event.target.result);
+      updateExerciseScreen();
+    };
+    reader.readAsDataURL(file);
+  }
+  // Reset input
+  e.target.value = '';
+});
 
 function selectDay(day) {
   currentDay = day;
