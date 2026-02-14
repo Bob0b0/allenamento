@@ -594,8 +594,6 @@
   </div>
 </div>
 
-<input type="file" id="photoInput" accept="image/*" style="display: none;">
-
 <script>
 const workoutData = {
   A: [
@@ -869,7 +867,6 @@ const workoutData = {
 
 let currentDay = null;
 let currentExercise = 0;
-let currentPhotoExerciseId = null;
 let editMode = false;
 let editedData = {};
 
@@ -940,8 +937,30 @@ function saveCurrentExercise() {
 }
 
 function handlePhotoClick(exerciseId) {
-  currentPhotoExerciseId = exerciseId;
-  document.getElementById('photoInput').click();
+  // Create a fresh input element each time (iOS Safari fix)
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = 'image/*';
+  input.style.display = 'none';
+  
+  // Handle file selection
+  input.addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = function(event) {
+        savePhoto(exerciseId, event.target.result);
+        updateExerciseScreen();
+      };
+      reader.readAsDataURL(file);
+    }
+    // Clean up
+    document.body.removeChild(input);
+  });
+  
+  // Add to DOM and trigger click
+  document.body.appendChild(input);
+  input.click();
 }
 
 // Backup/Restore Modal
@@ -1016,20 +1035,6 @@ function importData() {
 }
 
 document.getElementById('importInput').addEventListener('change', importData);
-
-document.getElementById('photoInput').addEventListener('change', function(e) {
-  const file = e.target.files[0];
-  if (file && currentPhotoExerciseId) {
-    const reader = new FileReader();
-    reader.onload = function(event) {
-      savePhoto(currentPhotoExerciseId, event.target.result);
-      updateExerciseScreen();
-    };
-    reader.readAsDataURL(file);
-  }
-  // Reset input
-  e.target.value = '';
-});
 
 function selectDay(day) {
   currentDay = day;
