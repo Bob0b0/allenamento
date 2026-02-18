@@ -1137,28 +1137,11 @@ function parseSeriesData(carico, recupero, serieField) {
   
   const series = [];
   
-  // Pattern: "peso(reps)" or "peso(reps-reps-reps)" or "peso1(reps1) peso2(reps2)"
-  const parts = carico.match(/[\d,\.]+\([^)]+\)/g);
+  // Check if carico has format like "12,5(10)" - for supersets, keep as-is
+  const hasSupersetFormat = /^[\d,\.]+\(\d+\)$/.test(carico.trim());
   
-  if (parts) {
-    // Carico has detailed info like "12.5(10-10-12)"
-    parts.forEach(part => {
-      const match = part.match(/([\d,\.]+)\((.+)\)/);
-      if (match) {
-        const peso = match[1];
-        const reps = match[2].split('-').map(r => r.trim());
-        
-        reps.forEach(rep => {
-          series.push({
-            rip: rep,
-            kg: peso,
-            rec: recDisplay
-          });
-        });
-      }
-    });
-  } else if (carico !== "-" && carico !== "Corpo libero" && serieField) {
-    // Carico is simple like "25", extract series info from serieField like "3×10"
+  if (hasSupersetFormat && serieField) {
+    // This is a superset - don't split carico, keep "12,5(10)" format
     const serieMatch = serieField.match(/(\d+)\s*[×x]\s*(\d+)/);
     if (serieMatch) {
       const numSeries = parseInt(serieMatch[1]);
@@ -1167,17 +1150,66 @@ function parseSeriesData(carico, recupero, serieField) {
       for (let i = 0; i < Math.min(numSeries, 3); i++) {
         series.push({
           rip: reps,
+          kg: carico,  // Keep full format like "12,5(10)"
+          rec: recDisplay
+        });
+      }
+    }
+  } else {
+    // Pattern: "peso(reps-reps-reps)" or "peso1(reps1) peso2(reps2)" - detailed series
+    const parts = carico.match(/[\d,\.]+\([^)]+\)/g);
+    
+    if (parts && parts.length > 0) {
+      // Check if it's multiple parts like "30(10) 35(9-7)" or single part with dashes "80(12-12-10)"
+      const firstPart = parts[0];
+      const firstMatch = firstPart.match(/([\d,\.]+)\((.+)\)/);
+      
+      if (firstMatch) {
+        const repsInFirst = firstMatch[2].split('-');
+        
+        if (repsInFirst.length > 1 || parts.length > 1) {
+          // Has detailed series info - use it
+          parts.forEach(part => {
+            const match = part.match(/([\d,\.]+)\((.+)\)/);
+            if (match) {
+              const peso = match[1];
+              const reps = match[2].split('-').map(r => r.trim());
+              
+              reps.forEach(rep => {
+                series.push({
+                  rip: rep,
+                  kg: peso,
+                  rec: recDisplay
+                });
+              });
+            }
+          });
+        }
+      }
+    } 
+    
+    // If no series created yet, use simple format from serie field
+    if (series.length === 0 && carico !== "-" && carico !== "Corpo libero" && serieField) {
+      const serieMatch = serieField.match(/(\d+)\s*[×x]\s*(\d+)/);
+      if (serieMatch) {
+        const numSeries = parseInt(serieMatch[1]);
+        const reps = serieMatch[2];
+        
+        for (let i = 0; i < Math.min(numSeries, 3); i++) {
+          series.push({
+            rip: reps,
+            kg: carico,
+            rec: recDisplay
+          });
+        }
+      } else {
+        // Can't parse serie field, create single entry
+        series.push({
+          rip: "-",
           kg: carico,
           rec: recDisplay
         });
       }
-    } else {
-      // Can't parse serie field, create single entry
-      series.push({
-        rip: "-",
-        kg: carico,
-        rec: recDisplay
-      });
     }
   }
   
