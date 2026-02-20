@@ -1,0 +1,671 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <title>Personal Workout Plan - Istruzioni</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      line-height: 1.6;
+      color: #333;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+      min-height: 100vh;
+      padding: 2rem 1rem;
+    }
+    
+    .container {
+      max-width: 800px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 1.5rem;
+      padding: 2rem;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+    }
+    
+    h1 {
+      color: #667eea;
+      font-size: 2.5rem;
+      margin-bottom: 0.5rem;
+      text-align: center;
+    }
+    
+    .subtitle {
+      text-align: center;
+      color: #666;
+      margin-bottom: 2rem;
+      font-size: 1.1rem;
+    }
+    
+    nav {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      border-radius: 1rem;
+      padding: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    
+    nav h2 {
+      color: white;
+      font-size: 1.3rem;
+      margin-bottom: 1rem;
+    }
+    
+    nav ul {
+      list-style: none;
+    }
+    
+    nav ul li {
+      margin-bottom: 0.5rem;
+    }
+    
+    nav a {
+      color: white;
+      text-decoration: none;
+      opacity: 0.9;
+      transition: opacity 0.2s;
+      display: block;
+      padding: 0.3rem 0;
+    }
+    
+    nav a:hover {
+      opacity: 1;
+      text-decoration: underline;
+    }
+    
+    h2 {
+      color: #764ba2;
+      font-size: 1.8rem;
+      margin-top: 2rem;
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid #f093fb;
+    }
+    
+    h3 {
+      color: #667eea;
+      font-size: 1.4rem;
+      margin-top: 1.5rem;
+      margin-bottom: 0.8rem;
+    }
+    
+    p {
+      margin-bottom: 1rem;
+      color: #444;
+    }
+    
+    ul, ol {
+      margin-left: 2rem;
+      margin-bottom: 1rem;
+    }
+    
+    li {
+      margin-bottom: 0.5rem;
+      color: #444;
+    }
+    
+    strong {
+      color: #667eea;
+      font-weight: 600;
+    }
+    
+    code {
+      background: #f5f5f5;
+      padding: 0.2rem 0.5rem;
+      border-radius: 0.3rem;
+      font-family: 'Courier New', monospace;
+      font-size: 0.9rem;
+      color: #d63384;
+    }
+    
+    .info-box {
+      background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+      border-left: 4px solid #667eea;
+      padding: 1rem;
+      margin: 1rem 0;
+      border-radius: 0.5rem;
+    }
+    
+    .warning-box {
+      background: rgba(234, 179, 8, 0.1);
+      border-left: 4px solid #eab308;
+      padding: 1rem;
+      margin: 1rem 0;
+      border-radius: 0.5rem;
+    }
+    
+    .success-box {
+      background: rgba(16, 185, 129, 0.1);
+      border-left: 4px solid #10b981;
+      padding: 1rem;
+      margin: 1rem 0;
+      border-radius: 0.5rem;
+    }
+    
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 1rem 0;
+      background: white;
+    }
+    
+    th {
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      padding: 0.8rem;
+      text-align: left;
+      font-weight: 600;
+    }
+    
+    td {
+      padding: 0.8rem;
+      border-bottom: 1px solid #e5e7eb;
+    }
+    
+    tr:hover {
+      background: #f9fafb;
+    }
+    
+    .badge {
+      display: inline-block;
+      padding: 0.3rem 0.8rem;
+      border-radius: 1rem;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-right: 0.5rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .badge-blue { background: #3b82f6; color: white; }
+    .badge-green { background: #10b981; color: white; }
+    .badge-purple { background: #8b5cf6; color: white; }
+    .badge-yellow { background: #f59e0b; color: white; }
+    .badge-red { background: #ef4444; color: white; }
+    
+    @media (max-width: 768px) {
+      body {
+        padding: 1rem 0.5rem;
+      }
+      
+      .container {
+        padding: 1.5rem;
+        border-radius: 1rem;
+      }
+      
+      h1 {
+        font-size: 2rem;
+      }
+      
+      h2 {
+        font-size: 1.5rem;
+      }
+    }
+    
+    .back-to-top {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: white;
+      width: 3rem;
+      height: 3rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+      font-size: 1.5rem;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      opacity: 0;
+      transition: opacity 0.3s;
+    }
+    
+    .back-to-top.visible {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>💪 Personal Workout Plan</h1>
+    <div class="subtitle">Guida Utente Completa</div>
+    
+    <nav id="toc">
+      <h2>📋 Indice</h2>
+      <ul>
+        <li><a href="#descrizione">Descrizione</a></li>
+        <li><a href="#caratteristiche">Caratteristiche Principali</a></li>
+        <li><a href="#installazione">Installazione</a></li>
+        <li><a href="#utilizzo">Utilizzo dell'App</a></li>
+        <li><a href="#gestione-dati">Gestione Dati</a></li>
+        <li><a href="#legenda">Legenda Colori</a></li>
+        <li><a href="#requisiti">Requisiti Tecnici</a></li>
+        <li><a href="#problemi">Risoluzione Problemi</a></li>
+        <li><a href="#palestra">Note per l'Uso in Palestra</a></li>
+      </ul>
+    </nav>
+
+    <section id="descrizione">
+      <h2>📱 Descrizione</h2>
+      <p>App web progressiva (PWA) per la gestione del tuo programma di allenamento personalizzato in palestra. Consente di visualizzare esercizi, aggiungere foto delle macchine, modificare parametri di allenamento e tenere traccia dei progressi.</p>
+    </section>
+
+    <section id="caratteristiche">
+      <h2>✨ Caratteristiche Principali</h2>
+      <div class="success-box">
+        <p><strong>✅ 3 Programmi di Allenamento</strong> - Giorni A, B e C con esercizi specifici</p>
+        <p><strong>✅ Visualizzazione Dettagliata</strong> - Ripetizioni, carico e recupero per ogni serie</p>
+        <p><strong>✅ Foto Personalizzate</strong> - Scatta o carica foto delle macchine/esercizi</p>
+        <p><strong>✅ Modalità Modifica</strong> - Personalizza nomi esercizi e parametri</p>
+        <p><strong>✅ Navigazione Intuitiva</strong> - Swipe, frecce e pulsanti di navigazione</p>
+        <p><strong>✅ Salvataggio Automatico</strong> - Tutte le modifiche e foto salvate localmente</p>
+        <p><strong>✅ Installabile</strong> - Funziona come app nativa su smartphone</p>
+      </div>
+    </section>
+
+    <section id="installazione">
+      <h2>📱 Installazione</h2>
+      
+      <h3>iPhone/iPad</h3>
+      <ol>
+        <li><strong>Apri l'app in Safari</strong>
+          <ul>
+            <li>Assicurati di usare Safari (non Chrome o altri browser)</li>
+            <li>Vai a: <strong>https://bob0b0.github.io/allenamento</strong></li>
+          </ul>
+        </li>
+        <li><strong>Aggiungi alla Home Screen</strong>
+          <ul>
+            <li>Tocca il pulsante "Condividi" (quadrato con freccia verso l'alto)</li>
+            <li>Scorri e tocca "Aggiungi a Home"</li>
+            <li>Conferma toccando "Aggiungi"</li>
+          </ul>
+        </li>
+        <li><strong>Avvia l'app</strong>
+          <ul>
+            <li>L'icona apparirà sulla Home Screen</li>
+            <li>Tocca per aprire l'app in modalità standalone</li>
+          </ul>
+        </li>
+      </ol>
+
+      <h3>Android</h3>
+      <ol>
+        <li><strong>Apri l'app in Chrome</strong>
+          <ul>
+            <li>Usa Chrome come browser</li>
+            <li>Vai a: <strong>https://bob0b0.github.io/allenamento</strong></li>
+          </ul>
+        </li>
+        <li><strong>Installa l'app</strong>
+          <ul>
+            <li>Tocca i tre puntini in alto a destra</li>
+            <li>Seleziona "Aggiungi a schermata Home" o "Installa app"</li>
+            <li>Conferma l'installazione</li>
+          </ul>
+        </li>
+        <li><strong>Avvia l'app</strong>
+          <ul>
+            <li>L'icona apparirà sulla Home Screen</li>
+            <li>Tocca per aprire l'app</li>
+          </ul>
+        </li>
+      </ol>
+    </section>
+
+    <section id="utilizzo">
+      <h2>🏋️ Utilizzo dell'App</h2>
+      
+      <h3>Schermata Iniziale</h3>
+      <p>Dalla home screen, scegli il tuo programma di allenamento:</p>
+      <ul>
+        <li><strong>Giorno A</strong> - 9 esercizi</li>
+        <li><strong>Giorno B</strong> - 10 esercizi</li>
+        <li><strong>Giorno C</strong> - 9 esercizi</li>
+      </ul>
+
+      <h3>Visualizzazione Esercizio</h3>
+      <p>Ogni esercizio mostra:</p>
+      
+      <div class="info-box">
+        <p><strong>Header</strong></p>
+        <ul>
+          <li>Badge colorato del tipo (Macchina, Pesi Liberi, Cavi, Corpo Libero, Cardio)</li>
+          <li>Nome dell'esercizio</li>
+          <li>Nome della macchina (se applicabile)</li>
+        </ul>
+      </div>
+
+      <div class="info-box">
+        <p><strong>Foto</strong></p>
+        <ul>
+          <li>Area bianca con placeholder o foto personalizzata</li>
+          <li>Icona fotocamera in alto a destra per scattare/caricare foto</li>
+        </ul>
+      </div>
+
+      <div class="info-box">
+        <p><strong>Tabella Allenamento</strong></p>
+        <table>
+          <thead>
+            <tr>
+              <th>RIP</th>
+              <th>KG</th>
+              <th>REC.</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>10</td>
+              <td>25,5</td>
+              <td>180″</td>
+            </tr>
+            <tr>
+              <td>9</td>
+              <td>30</td>
+              <td>180″</td>
+            </tr>
+            <tr>
+              <td>9</td>
+              <td>30</td>
+              <td>180″</td>
+            </tr>
+          </tbody>
+        </table>
+        <ul>
+          <li><strong>RIP</strong> = Ripetizioni da eseguire</li>
+          <li><strong>KG</strong> = Carico in chilogrammi</li>
+          <li><strong>REC.</strong> = Recupero in secondi</li>
+        </ul>
+      </div>
+
+      <div class="info-box">
+        <p><strong>Note Tecniche</strong></p>
+        <p>Riquadro giallo con consigli sull'esecuzione corretta</p>
+      </div>
+
+      <h3>📷 Aggiungere/Modificare Foto</h3>
+      <ol>
+        <li>Tocca l'<strong>icona fotocamera</strong> (📷) sull'immagine dell'esercizio</li>
+        <li>Scegli:
+          <ul>
+            <li><strong>Scatta foto</strong> - Usa la fotocamera</li>
+            <li><strong>Scegli dalla libreria</strong> - Seleziona foto esistente</li>
+          </ul>
+        </li>
+        <li>La foto viene <strong>automaticamente compressa</strong> (max 800×600px, qualità 75%)</li>
+        <li>La foto compressa viene salvata in localStorage</li>
+      </ol>
+      <div class="warning-box">
+        <p><strong>Nota:</strong> La compressione automatica permette di salvare tutte le 28 foto (9+10+9 esercizi) mantenendo una qualità sufficiente per riconoscere le macchine.</p>
+      </div>
+
+      <h3>✏️ Modificare Parametri</h3>
+      <ol>
+        <li>Tocca i <strong>tre puntini</strong> (⋯) accanto al nome della macchina</li>
+        <li>Entra in <strong>modalità modifica</strong>:
+          <ul>
+            <li>Il nome dell'esercizio diventa modificabile</li>
+            <li>I valori nella tabella (RIP, KG, REC.) diventano modificabili</li>
+          </ul>
+        </li>
+        <li>Modifica i valori desiderati</li>
+        <li>Tocca <strong>💾 Salva</strong> per confermare le modifiche</li>
+      </ol>
+      <div class="warning-box">
+        <p><strong>Nota:</strong> Se cambi esercizio mentre sei in modalità modifica, le modifiche vengono salvate automaticamente.</p>
+      </div>
+
+      <h3>🔄 Navigazione tra Esercizi</h3>
+      <p><strong>Metodo 1: Swipe</strong></p>
+      <ul>
+        <li>Swipe <strong>verso sinistra</strong> → Esercizio successivo</li>
+        <li>Swipe <strong>verso destra</strong> → Esercizio precedente</li>
+      </ul>
+
+      <p><strong>Metodo 2: Pulsanti</strong></p>
+      <ul>
+        <li>Tocca <strong>◀ Prec</strong> → Esercizio precedente</li>
+        <li>Tocca <strong>Succ ▶</strong> → Esercizio successivo</li>
+      </ul>
+
+      <p><strong>Metodo 3: Dots</strong></p>
+      <ul>
+        <li>Tocca uno dei <strong>pallini</strong> in basso per saltare a un esercizio specifico</li>
+        <li>Il pallino azzurro allungato indica l'esercizio corrente</li>
+      </ul>
+
+      <p><strong>Tornare alla Home</strong></p>
+      <ul>
+        <li>Tocca l'<strong>icona casa</strong> (🏠) in alto a sinistra</li>
+      </ul>
+    </section>
+
+    <section id="gestione-dati">
+      <h2>💾 Gestione Dati</h2>
+      
+      <h3>Dove Vengono Salvati i Dati</h3>
+      <p>Tutti i dati sono salvati <strong>localmente</strong> sul tuo dispositivo tramite localStorage:</p>
+      <ul>
+        <li>✅ Foto degli esercizi</li>
+        <li>✅ Modifiche ai nomi degli esercizi</li>
+        <li>✅ Modifiche ai parametri (ripetizioni, carico, recupero)</li>
+      </ul>
+
+      <h3>Backup e Restore</h3>
+      <p><strong>Accesso alla funzione:</strong></p>
+      <ol>
+        <li>Dalla schermata principale (home), sotto i pulsanti dei giorni A/B/C</li>
+        <li>Tocca il link <strong>"Import/Export Dati"</strong></li>
+        <li>Si aprirà una finestra con le opzioni</li>
+      </ol>
+
+      <p><strong>Esportare i Dati (Backup):</strong></p>
+      <ol>
+        <li>Tocca il pulsante <strong>📥 Export</strong></li>
+        <li><strong>Su iPhone:</strong> Si aprirà un'anteprima del file
+          <ul>
+            <li>Tocca <strong>"Altro..."</strong> in basso</li>
+            <li>Seleziona <strong>"Salva su File"</strong></li>
+            <li>Scegli la cartella "Download" o "iCloud Drive"</li>
+            <li>Tocca <strong>"Salva"</strong></li>
+          </ul>
+        </li>
+        <li><strong>Su Android:</strong> Il file viene scaricato automaticamente nella cartella <strong>Download</strong></li>
+        <li>Nome file: <code>allenamento_backup_AAAA-MM-GG.json</code></li>
+        <li>Conserva questo file in un luogo sicuro (cloud, computer, ecc.)</li>
+      </ol>
+
+      <p><strong>Importare i Dati (Restore):</strong></p>
+      <ol>
+        <li>Tocca il pulsante <strong>📤 Import</strong></li>
+        <li>Seleziona il file di backup precedentemente salvato</li>
+        <li>I dati verranno ripristinati automaticamente</li>
+        <li>L'app si aggiornerà con foto e modifiche del backup</li>
+      </ol>
+
+      <div class="info-box">
+        <p><strong>Quando fare un backup:</strong></p>
+        <ul>
+          <li>✅ Prima di cambiare smartphone</li>
+          <li>✅ Periodicamente per sicurezza</li>
+          <li>✅ Prima di cancellare i dati del browser</li>
+          <li>✅ Se vuoi condividere il tuo programma con qualcuno</li>
+        </ul>
+      </div>
+
+      <h3>Persistenza dei Dati</h3>
+      <ul>
+        <li>I dati rimangono anche se chiudi l'app</li>
+        <li>I dati rimangono anche se riavvii il dispositivo</li>
+        <li>I dati sono specifici per ogni esercizio (identificati tramite ID univoco)</li>
+      </ul>
+
+      <h3>Cancellare i Dati</h3>
+      <p>Per resettare l'app e cancellare tutte le modifiche:</p>
+      
+      <p><strong>iPhone/iPad:</strong></p>
+      <ol>
+        <li>Apri Impostazioni → Safari → Avanzate</li>
+        <li>Dati dei siti web → Rimuovi dati del sito specifico</li>
+      </ol>
+
+      <p><strong>Android:</strong></p>
+      <ol>
+        <li>Impostazioni → App → Chrome (o il tuo browser)</li>
+        <li>Archiviazione → Cancella dati</li>
+      </ol>
+    </section>
+
+    <section id="legenda">
+      <h2>🎨 Legenda Colori</h2>
+      <p>
+        <span class="badge badge-blue">🔵 Macchina</span>
+        <span class="badge badge-green">🟢 Pesi Liberi</span>
+        <span class="badge badge-purple">🟣 Cavi</span>
+        <span class="badge badge-yellow">🟡 Corpo Libero</span>
+        <span class="badge badge-red">🔴 Cardio</span>
+      </p>
+    </section>
+
+    <section id="requisiti">
+      <h2>⚙️ Requisiti Tecnici</h2>
+      <ul>
+        <li><strong>Browser:</strong> Safari (iOS) o Chrome (Android)</li>
+        <li><strong>Connessione:</strong> Richiesta solo per il primo caricamento</li>
+        <li><strong>Offline:</strong> L'app funziona anche offline dopo l'installazione</li>
+        <li><strong>Spazio:</strong> Circa 5-8MB totali (include app + tutte le foto compresse)</li>
+        <li><strong>Foto:</strong> Compressione automatica a 800×600px per ottimizzare lo spazio</li>
+      </ul>
+    </section>
+
+    <section id="problemi">
+      <h2>🐛 Risoluzione Problemi</h2>
+      
+      <h3>L'app non si installa</h3>
+      <ul>
+        <li>Verifica di usare il browser corretto (Safari su iOS, Chrome su Android)</li>
+        <li>Prova a ricaricare la pagina</li>
+      </ul>
+
+      <h3>Le foto non vengono salvate</h3>
+      <ul>
+        <li>Verifica i permessi della fotocamera/galleria nelle impostazioni del dispositivo</li>
+        <li>Assicurati di non essere in modalità navigazione privata</li>
+        <li><strong>Le foto vengono automaticamente compresse</strong> per risparmiare spazio (qualità sufficiente per riconoscere le macchine)</li>
+        <li>Se hai già molte foto salvate, prova a eliminarne alcune per liberare spazio</li>
+      </ul>
+
+      <h3>Le modifiche non vengono salvate</h3>
+      <ul>
+        <li>Tocca sempre "💾 Salva" prima di uscire dalla modalità modifica</li>
+        <li>Verifica che il browser abbia i permessi di archiviazione</li>
+      </ul>
+
+      <h3>L'app è lenta</h3>
+      <ul>
+        <li>Chiudi altre app in background</li>
+        <li>Le foto molto grandi possono rallentare l'app (considera di ridimensionarle)</li>
+      </ul>
+
+      <h3>Problemi con Import/Export</h3>
+      <ul>
+        <li><strong>iPhone:</strong> Dopo Export, ricorda di toccare "Altro..." → "Salva su File" per salvare il backup</li>
+        <li>Assicurati che il file di backup sia in formato <code>.json</code></li>
+        <li>Non modificare manualmente il file di backup</li>
+        <li>Se l'import fallisce, verifica che il file non sia corrotto</li>
+        <li>Per cambiare dispositivo: Export sul vecchio → Trasferisci file → Import sul nuovo</li>
+      </ul>
+    </section>
+
+    <section id="palestra">
+      <h2>📝 Note per l'Uso in Palestra</h2>
+      
+      <div class="success-box">
+        <p><strong>Consigli Pratici:</strong></p>
+        <ul>
+          <li>📸 Scatta foto delle macchine al primo utilizzo per identificarle facilmente</li>
+          <li>🖼️ <strong>Le foto vengono compresse automaticamente</strong> a 800×600px - la qualità è sufficiente per riconoscere le macchine</li>
+          <li>💾 Puoi caricare fino a <strong>28 foto totali</strong> (tutte le macchine dei 3 giorni)</li>
+          <li>✏️ Aggiorna i pesi dopo ogni allenamento per tracciare i progressi</li>
+          <li>🔢 Usa il formato "180″" per i secondi di recupero (es. 3 minuti = 180″)</li>
+          <li>📱 Tieni lo schermo attivo durante l'allenamento nelle impostazioni del telefono</li>
+        </ul>
+      </div>
+
+      <p><strong>Formato Dati:</strong></p>
+      <ul>
+        <li><strong>Ripetizioni:</strong> Numero intero (es. 10, 12, 15)</li>
+        <li><strong>Carico:</strong> Numero con virgola o punto (es. 25,5 o 25.5)</li>
+        <li><strong>Recupero:</strong> Secondi con doppi apici (es. 60″, 120″, 180″)</li>
+      </ul>
+    </section>
+
+    <section id="versione">
+      <h2>🆕 Versione</h2>
+      <p><strong>Versione 1.0</strong> - Febbraio 2026</p>
+      
+      <div class="info-box">
+        <p><strong>Funzionalità implementate:</strong></p>
+        <ul>
+          <li>✅ Visualizzazione 3 programmi di allenamento</li>
+          <li>✅ Tabella RIP/KG/REC. per serie dettagliate</li>
+          <li>✅ Sistema foto personalizzate con <strong>compressione automatica</strong></li>
+          <li>✅ Modalità modifica parametri</li>
+          <li>✅ Salvataggio locale persistente</li>
+          <li>✅ <strong>Backup/Restore dati completo</strong></li>
+          <li>✅ Navigazione multipla (swipe, pulsanti, dots)</li>
+          <li>✅ Design responsive mobile-first</li>
+          <li>✅ PWA installabile</li>
+          <li>✅ Supporto fino a 28 foto (tutte le macchine dei 3 giorni)</li>
+        </ul>
+      </div>
+    </section>
+
+    <section id="supporto">
+      <h2>📧 Supporto</h2>
+      <p>Per domande, problemi o suggerimenti, contatta il creatore dell'app.</p>
+    </section>
+
+    <div style="text-align: center; margin-top: 3rem; padding-top: 2rem; border-top: 2px solid #e5e7eb;">
+      <h2 style="color: #667eea;">Buon Allenamento! 💪🏋️‍♂️</h2>
+      <p style="margin-top: 1rem;">
+        <a href="https://bob0b0.github.io/allenamento" style="color: #667eea; text-decoration: none; font-weight: 600;">
+          🏠 Torna all'App
+        </a>
+      </p>
+    </div>
+  </div>
+
+  <a href="#toc" class="back-to-top" id="backToTop">↑</a>
+
+  <script>
+    // Smooth scrolling for anchor links
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+      anchor.addEventListener('click', function (e) {
+        e.preventDefault();
+        const target = document.querySelector(this.getAttribute('href'));
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      });
+    });
+
+    // Show/hide back to top button
+    const backToTop = document.getElementById('backToTop');
+    window.addEventListener('scroll', () => {
+      if (window.scrollY > 300) {
+        backToTop.classList.add('visible');
+      } else {
+        backToTop.classList.remove('visible');
+      }
+    });
+  </script>
+</body>
+</html>
