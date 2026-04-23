@@ -1326,21 +1326,21 @@ function updateExerciseScreen() {
   if (exercise.tipo !== 'corpo_libero' && exercise.tipo !== 'cardio') {
     const savedPhoto = getPhoto(exercise.id);
     
-    // Priority: 1) localStorage (user uploaded), 2) GitHub, 3) placeholder
+    // Priority: 1) localStorage (user uploaded), 2) GitHub (.jpeg or .jpg), 3) placeholder
     let imageUrl;
     if (savedPhoto) {
       // User has uploaded a custom photo
       imageUrl = savedPhoto;
     } else {
-      // Try to load from GitHub, fallback to placeholder on error
-      imageUrl = `immagini/${exercise.id}.jpg`;
+      // Try to load from GitHub - try .jpeg first, then .jpg
+      imageUrl = `immagini/${exercise.id}.jpeg`;
     }
     
     const placeholderSvg = `data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 200'%3E%3Crect fill='%23e5e7eb' width='200' height='200'/%3E%3Ctext x='50%25' y='45%25' text-anchor='middle' dy='.3em' fill='%239ca3af' font-family='sans-serif' font-size='14'%3ETechnogym%3C/text%3E%3Ctext x='50%25' y='60%25' text-anchor='middle' dy='.3em' fill='%23b0b0b0' font-family='sans-serif' font-size='9'%3E${encodeURIComponent(exercise.nome)}%3C/text%3E%3C/svg%3E`;
     
     html += `
       <div class="exercise-image" onclick="handlePhotoClick('${exercise.id}')">
-        <img src="${imageUrl}" alt="${exercise.nome}" onerror="this.src='${placeholderSvg}'">
+        <img src="${imageUrl}" alt="${exercise.nome}" onerror="this.onerror=null; this.src=this.src.replace('.jpeg','.jpg'); if(this.src.includes('.jpg') && !this.src.includes('data:')) { this.onerror=function(){ this.src='${placeholderSvg}'; }; } else { this.src='${placeholderSvg}'; }">
         <div class="photo-overlay">📷</div>
       </div>
     `;
